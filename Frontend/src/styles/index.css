@@ -1,0 +1,24 @@
+/* Importa las directivas de Tailwind CSS */
+@import 'tailwindcss';
+
+/* Estilos base personalizados */
+@layer base {
+	input:-webkit-autofill {
+		box-shadow: 0 0 0px 1000px #d9d9d9 inset !important; /* color del fondo */
+		-webkit-text-fill-color: #000 !important;
+		border: 1px solid #ccc !important;
+		outline: none !important;
+	}
+}
+/* Para Chrome, Safari, Edge */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Para Firefox */
+input[type='number'] {
+	-moz-appearance: textfield;
+    
+}
