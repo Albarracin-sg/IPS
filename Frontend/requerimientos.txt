@@ -1,0 +1,11 @@
+tailwind (estilo)
+npm install tailwindcss @tailwindcss/vite
+
+react-router-dom (enrrutador)
+npm install react-router-dom
+
+
+axios (peticiones http)
+npm install axios
+
+npm install react-router-dom @tailwindcss/vite axios (Instalar todo en una sola linea)
