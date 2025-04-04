@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function Card() {
     const [showModal, setShowModal] = useState(false);
 
-    const handleConsultar = () => {
+    const handleConsultarCita = () => {
         setShowModal(true);
     };
 
@@ -23,7 +23,7 @@ export default function Card() {
 
     return (
         <>
-            <div className="bg-white shadow-xl rounded-2xl p-8 w-[350px] mx-auto flex justify-center items-center flex-col backdrop-blur-lg bg-white/90 border border-gray-100">
+            <div className="bg-white shadow-xl rounded-2xl p-8 w-[350px] mx-auto flex justify-center items-center flex-col backdrop-blur-lg border border-gray-100">
                 <div className="mb-6 text-center">
                     <h2 className="text-2xl font-bold text-gray-800 mb-1">REGISTRO DE PACIENTES</h2>
                     <div className="h-1 w-20 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full mx-auto"></div>
@@ -42,7 +42,7 @@ export default function Card() {
                     </div>
                 </div>
                 
-                <Button text="Consultar" tipo="consultar" onClick={handleConsultar} />
+                <Button text="Consultar Cita" tipo="ConsultarCita" onClick={handleConsultarCita} />
                 <Button text="Registrar" tipo="registro" onClick={handleRedirect} />
             </div>
 
