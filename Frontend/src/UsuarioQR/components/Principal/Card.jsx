@@ -23,7 +23,7 @@ export default function Card() {
 
     return (
         <>
-            <div className="bg-white shadow-xl rounded-2xl p-8 w-[350px] mx-auto flex justify-center items-center flex-col backdrop-blur-lg bg-white/90 border border-gray-100">
+            <div className="bg-white shadow-xl rounded-2xl p-8 w-[350px] mx-auto flex justify-center items-center flex-col backdrop-blur-lg border border-gray-100">
                 <div className="mb-6 text-center">
                     <h2 className="text-2xl font-bold text-gray-800 mb-1">REGISTRO DE PACIENTES</h2>
                     <div className="h-1 w-20 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full mx-auto"></div>

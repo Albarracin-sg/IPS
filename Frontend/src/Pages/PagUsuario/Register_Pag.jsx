@@ -4,7 +4,7 @@ import RegisterForm from "../../UsuarioQR/components/Register/registro"
 
 const Form = () => {
 	return (
-		<div className="relative min-h-screen w-screen bg-[#6ea3c7] flex justify-center items-center overflow-auto">
+		<div className="relative min-h-screen w-screen bg-blue-400 flex justify-center items-center overflow-auto">
 			<div className="absolute top-0 left-0 m-4">
 				{/* Imagen de la IPS */}
 				<img
