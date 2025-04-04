@@ -9,7 +9,7 @@ export default function Button({ text, tipo, onClick }) {
     
     return (
         <button
-            className={`${estilo}  font-medium px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg w-full mb-2 flex items-center justify-center`}
+            className={`${estilo}  font-medium px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 transform hover:scale-105 shadow-lg w-full mb-2 flex items-center justify-center`}
             onClick={onClick}
         >
             {tipo === "ConsultarCita" ? (

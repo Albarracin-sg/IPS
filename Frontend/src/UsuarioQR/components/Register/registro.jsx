@@ -53,9 +53,7 @@ const RegisterForm = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Campo para primer apellido */}
             <div>
-              
               <Label htmlFor="primerApellido" text="Primer Apellido" tipo="subtitulo"/>
-
               <input
                 className="w-full px-4 py-2 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 transition-colors text-gray-700"
                 type="text"
@@ -68,9 +66,7 @@ const RegisterForm = () => {
 
             {/* Campo para segundo apellido (opcional) */}
             <div>
-              <label htmlFor="segundoApellido" className="block text-sm font-medium text-gray-700 mb-1">
-                Segundo Apellido
-              </label>
+              <Label htmlFor="segundoApellido" text="Segundo Apellido" tipo="subtitulo"/>
               <input
                 className="w-full px-4 py-2 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 transition-colors text-gray-700"
                 type="text"
@@ -83,23 +79,16 @@ const RegisterForm = () => {
 
           {/* Campo para fecha de nacimiento con ícono de calendario */}
           <div>
-            <label htmlFor="fechaNacimiento" className="block text-sm font-medium text-gray-700 mb-1">
-              Fecha de Nacimiento
-            </label>
+            <Label htmlFor="fechaNacimiento" text="Fecha de Nacimiento" tipo="subtitulo"/>
             <div className="relative">
               {/* Input de tipo date para seleccionar fecha */}
               <input
                 type="date"
                 name="fechaNacimiento"
-                className="w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 transition-colors text-gray-700"
+                className="w-full pl-5 pr-5 py-2 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 transition-colors text-gray-700"
                 required
-              />
-              {/* Ícono de calendario */}
-              <div className="absolute left-3 top-2.5 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 -3.5 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
+              /> 
+              
             </div>
           </div>
         </div>
@@ -112,9 +101,7 @@ const RegisterForm = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Campo para selección de localidad con menú desplegable */}
             <div>
-              <label htmlFor="localidad" className="block text-sm font-medium text-gray-700 mb-1">
-                Localidad
-              </label>
+              <Label htmlFor="localidad" text="Localidad" tipo="subtitulo"/>
               <div className="relative">
                 {/* Select personalizado con apariencia redondeada */}
                 <select
@@ -156,9 +143,7 @@ const RegisterForm = () => {
 
             {/* Campo para número de teléfono con ícono */}
             <div>
-              <label htmlFor="numeroTelefono" className="block text-sm font-medium text-gray-700 mb-1">
-                Número de Teléfono
-              </label>
+              <Label htmlFor="numeroTelefono" text="Número de Teléfono" tipo="subtitulo"/>
               <div className="relative">
                 {/* Input para teléfono con validación de formato */}
                 <input
@@ -185,9 +170,7 @@ const RegisterForm = () => {
 
           {/* Sección tipo de documento con menú desplegable */}
           <div>
-            <label htmlFor="tipoDocumento" className="block text-sm font-medium text-gray-700 mb-1">
-              Tipo de Documento
-            </label>
+            <Label htmlFor="tipoDocumento" text="Tipo de Documento" tipo="subtitulo"/>
             <div className="relative">
               {/* Select personalizado para tipos de documento */}
               <select
@@ -214,9 +197,7 @@ const RegisterForm = () => {
 
           {/* Campo para número de documento con ícono */}
           <div>
-            <label htmlFor="numeroDocumento" className="block text-sm font-medium text-gray-700 mb-1">
-              Documento
-            </label>
+            <Label htmlFor="numeroDocumento" text="Número de Documento" tipo="subtitulo"/>
             <div className="relative">
               {/* Input para número de documento con ícono */}
               <input
@@ -239,9 +220,7 @@ const RegisterForm = () => {
 
           {/* Campo para correo con ícono */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Correo electrónico
-            </label>
+            <Label htmlFor="email" text="Correo Electrónico" tipo="subtitulo"/>
             <div className="relative">
               {/* Input para correo electrónico con ícono */}
               <input
@@ -268,7 +247,7 @@ const RegisterForm = () => {
       <div className="flex justify-center mt-8">
         <button
           type="submit"
-          className="w-64 py-3 px-4 bg-gradient-to-r from-emerald-400 to-blue-500 text-white font-medium rounded-full hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-lg"
+          className="w-64 py-3 px-4 bg-gradient-to-r from-emerald-400 to-blue-500 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105  hover:opacity-50 shadow-lg"
         >
           ENVIAR
         </button>
