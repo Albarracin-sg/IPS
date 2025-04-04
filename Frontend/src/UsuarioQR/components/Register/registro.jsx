@@ -1,4 +1,5 @@
 import React from "react";
+import Label from "./Label";  
 
 const RegisterForm = () => {
   return (
@@ -23,9 +24,7 @@ const RegisterForm = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Campo para primer nombre */}
             <div>
-              <label htmlFor="primerNombre" className="block text-sm font-medium text-gray-700 mb-1">
-                Primer Nombre
-              </label>
+              <Label htmlFor="primerNombre" text="Primer Nombre" tipo="subtitulo"/>
               <input
                 className="w-full px-4 py-2 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 transition-colors text-gray-700"
                 type="text"
@@ -38,9 +37,8 @@ const RegisterForm = () => {
 
             {/* Campo para segundo nombre (opcional) */}
             <div>
-              <label htmlFor="segundoNombre" className="block text-sm font-medium text-gray-700 mb-1">
-                Segundo Nombre
-              </label>
+              <Label htmlFor="segundoNombre" text="Segundo Nombre" tipo="subtitulo"/>
+
               <input
                 className="w-full px-4 py-2 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 transition-colors text-gray-700"
                 type="text"
@@ -55,9 +53,9 @@ const RegisterForm = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Campo para primer apellido */}
             <div>
-              <label htmlFor="primerApellido" className="block text-sm font-medium text-gray-700 mb-1">
-                Primer Apellido
-              </label>
+              
+              <Label htmlFor="primerApellido" text="Primer Apellido" tipo="subtitulo"/>
+
               <input
                 className="w-full px-4 py-2 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 transition-colors text-gray-700"
                 type="text"
@@ -98,7 +96,7 @@ const RegisterForm = () => {
               />
               {/* Ícono de calendario */}
               <div className="absolute left-3 top-2.5 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 -3.5 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
@@ -149,7 +147,7 @@ const RegisterForm = () => {
                 </select>
                 {/* Ícono de flecha personalizado para el select */}
                 <div className="absolute right-4 top-3 text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 -3.5 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -174,13 +172,16 @@ const RegisterForm = () => {
                 />
                 {/* Ícono de teléfono posicionado a la izquierda */}
                 <div className="absolute left-3 top-2.5 text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 -3.5 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Sección de localidad y teléfono */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
           {/* Sección tipo de documento con menú desplegable */}
           <div>
@@ -204,7 +205,7 @@ const RegisterForm = () => {
               </select>
               {/* Ícono de flecha personalizado para el select */}
               <div className="absolute right-4 top-3 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 -3.5 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
@@ -228,8 +229,34 @@ const RegisterForm = () => {
               />
               {/* Ícono de documento de identidad */}
               <div className="absolute left-3 top-2.5 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 -3.5 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          {/* Campo para correo con ícono */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              Correo electrónico
+            </label>
+            <div className="relative">
+              {/* Input para correo electrónico con ícono */}
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="ejemplo@correo.com"
+                autoComplete="email"
+                className="w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 transition-colors text-gray-700"
+                required
+              />
+              {/* Ícono de correo electrónico */}
+              <div className="absolute left-3 top-2.5 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 -3.5 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
             </div>
