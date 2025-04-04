@@ -1,7 +1,6 @@
 import React from "react";
-import ipsLogo from "../../../../assets/ips.png"; // Asegúrate de que la ruta sea correcta
-import BotonNavegacion from "./BotonNavegacion";
 
+import Button from "../../UsuarioQR/components/Principal/button";
 const FormularioGeneral = () => {
     return (
         <div className="relative min-h-screen w-screen bg-[#6ea3c7] flex justify-center items-center overflow-auto">
@@ -30,8 +29,7 @@ const FormularioGeneral = () => {
                         />
                     </div>
                     <div className="flex justify-between">
-                        <BotonNavegacion texto={("Anterior")} />
-                        <BotonNavegacion texto={("Siguiente")} />
+
                     </div>
                 </form>
             </div>

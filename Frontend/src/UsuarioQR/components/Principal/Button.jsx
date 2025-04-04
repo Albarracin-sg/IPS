@@ -1,9 +1,7 @@
 import React from "react";
 
 export default function Button({ text, tipo, onClick }) {
-    const estilo = tipo === "consultar"
-        ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-300/50"
-        : "bg-blue-600 hover:bg-blue-700 shadow-blue-400/50";
+ 
    
     return (
         <button
