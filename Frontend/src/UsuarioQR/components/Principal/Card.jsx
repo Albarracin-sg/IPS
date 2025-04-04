@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function Card() {
     const [showModal, setShowModal] = useState(false);
 
-    const handleConsultar = () => {
+    const handleConsultarCita = () => {
         setShowModal(true);
     };
 
@@ -42,7 +42,7 @@ export default function Card() {
                     </div>
                 </div>
                 
-                <Button text="Consultar" tipo="consultar" onClick={handleConsultar} />
+                <Button text="Consultar Cita" tipo="ConsultarCita" onClick={handleConsultarCita} />
                 <Button text="Registrar" tipo="registro" onClick={handleRedirect} />
             </div>
 
