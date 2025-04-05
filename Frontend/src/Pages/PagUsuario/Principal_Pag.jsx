@@ -1,12 +1,12 @@
 import React from "react";
+import LogoInicio from "../../UsuarioQR/components/Logo";
 import Card from "../../UsuarioQR/components/Principal/Card";
 
 export default function PagUsuarioPrincipal() {
     return (
-        <div className="w-full h-[100vh] bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex justify-center items-center relative overflow-hidden">
-            <div>
-                <Card />
-            </div>
-        </div>
+        <div className="relative min-h-screen w-screen bg-blue-300 flex justify-center items-center overflow-auto">
+			<LogoInicio />
+			<Card />
+		</div>
     );
 }
