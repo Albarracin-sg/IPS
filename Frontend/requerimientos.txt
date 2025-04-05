@@ -12,5 +12,8 @@ lucide-react es una librería de íconos SVG para React, moderna, liviana y fác
 npm install lucide-react
 
 
-npm install react-router-dom @tailwindcss/vite axios (Instalar todo en una sola linea)
-https://heroicons.com
+npm install react-router-dom @tailwindcss/vite axios lucide-react
+(Instalar todo en una sola linea)
+
+
+https://heroicons.com -> pagina svg icons
