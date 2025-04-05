@@ -22,7 +22,7 @@ export default function Card() {
                 </div>
             </div>
             
-            <Button text="Consultar" tipo="consultar" />
+            <Button text="Generar Cita" tipo="consultar" />
             <Button text="Registrar" tipo="registro" />
         </div>
     );
