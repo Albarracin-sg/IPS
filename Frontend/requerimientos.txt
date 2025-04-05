@@ -8,5 +8,9 @@ npm install react-router-dom
 axios (peticiones http)
 npm install axios
 
+lucide-react es una librería de íconos SVG para React, moderna, liviana y fácil de usar. Es una alternativa actualizada a feather-icons, con una comunidad activa y diseños consistentes.
+npm install lucide-react
+
+
 npm install react-router-dom @tailwindcss/vite axios (Instalar todo en una sola linea)
 https://heroicons.com

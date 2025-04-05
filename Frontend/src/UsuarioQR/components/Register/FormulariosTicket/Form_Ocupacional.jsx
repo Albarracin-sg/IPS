@@ -1,3 +1,6 @@
+import React, { useState } from 'react';
+import { ChevronUp, ChevronDown, CheckSquare, Square } from 'lucide-react';
+
 // Specialized Component for Occupational Patient
 const PatienteOcupacional = ({ onSubmit }) => {
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -56,4 +59,5 @@ const PatienteOcupacional = ({ onSubmit }) => {
       </div>
     );
   };
-  
+
+  export default PatienteOcupacional;

@@ -65,3 +65,4 @@ const PatientParticular = ({ onSubmit }) => {
     </div>
   );
 };
+export default PatientParticular;

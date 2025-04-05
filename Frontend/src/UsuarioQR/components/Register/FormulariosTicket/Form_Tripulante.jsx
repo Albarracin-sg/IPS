@@ -1,5 +1,7 @@
-// Specialized Component for Ship Crew Members
-const TripulanteNaviera = ({ onSubmit }) => {
+import React, { useState } from 'react';
+import { ChevronUp, ChevronDown, CheckSquare, Square } from 'lucide-react';
+
+const Form_Tripulante = ({ onSubmit }) => {
     const [selectedCompany, setSelectedCompany] = useState("");
     const [customCompany, setCustomCompany] = useState("");
     const [selectedServices, setSelectedServices] = useState([]);
@@ -137,3 +139,5 @@ const TripulanteNaviera = ({ onSubmit }) => {
     </div>
   );
 };
+
+export default Form_Tripulante;
