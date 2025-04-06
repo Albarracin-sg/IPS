@@ -15,7 +15,7 @@ const RegisterForm = () => {
     numeroTelefono: "",
     tipoDocumento: "",
     numeroDocumento: "",
-    email: ""
+    email: "",
   });
 
   const navigate = useNavigate();
@@ -24,23 +24,33 @@ const RegisterForm = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
+  // Modificado: ahora solo valida el form y muestra el modal
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Log form data as JSON to console
-    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
-    // Show modal after form submission
+    // Solo mostrar el modal después de validar el formulario
     setShowModal(true);
   };
 
-  const handleCloseModal = () => {
+  const handleClose = () => {
     setShowModal(false);
   };
 
-  const handleRedirect = () => {
+  // Función para manejar el registro
+  const handleRegister = () => {
+    // Esta función no debería usarse en esta variante
+    console.log("Función de registro llamada pero no se usa en variante consulta");
+  };
+
+  // envía los datos y redirecciona
+  const handleTipoDeCita = () => {
+    // Log form data as JSON to console
+    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
+    // lógica para enviar datos al servidor
+
     console.log("Redireccionando a página tipo de cita");
     navigate("/TipoCita");
   };
@@ -61,7 +71,11 @@ const RegisterForm = () => {
         </div>
 
         {/* Formulario con layout flexible: vertical en móvil, horizontal en desktop */}
-        <form id="registrationForm" className="w-full flex flex-col md:flex-row gap-6" onSubmit={handleSubmit}>
+        <form
+          id="registrationForm"
+          className="w-full flex flex-col md:flex-row gap-6"
+          onSubmit={handleSubmit}
+        >
           {/* Columna izquierda (datos personales) - ocupa todo el ancho en móvil, mitad en desktop */}
           <div className="w-full md:w-1/2 space-y-4">
             <h3 className="text-lg font-semibold text-gray-700 border-b border-gray-200 pb-2">
@@ -384,7 +398,7 @@ const RegisterForm = () => {
                   name="email"
                   id="email"
                   placeholder="ejemplo@correo.com"
-                  autoComplete="email"
+                  autoComplete="off"
                   className="w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-full focus:outline-none focus:border-blue-500 transition-colors text-gray-700"
                   required
                   value={formData.email}
@@ -423,8 +437,15 @@ const RegisterForm = () => {
           </button>
         </div>
       </div>
+
+      {/* Modal correctamente configurado para la variante "consulta" */}
       {showModal && (
-        <Modal onClose={handleCloseModal} onRegister={handleRedirect} />
+        <Modal
+          onClose={handleClose}
+          onRegister={handleRegister}
+          onConsultar={handleTipoDeCita}
+          variant="consulta"
+        />
       )}
     </>
   );
