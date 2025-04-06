@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import Form_Particular from "../../UsuarioQR/components/Register/FormulariosTicket/Form_Particular";
-import Form_Tripulante from "../../UsuarioQR/components/Register/FormulariosTicket/Form_Tripulante";
-import Form_Ocupacional from "../../UsuarioQR/components/Register/FormulariosTicket/Form_Ocupacional";
+import Form_Particular from "./SubForms/Form_Particular";
+import Form_Tripulante from "./SubForms/Form_Tripulante";
+import Form_Ocupacional from "./SubForms/Form_Ocupacional";
 
 
 export default function RegistroUsuario() {
