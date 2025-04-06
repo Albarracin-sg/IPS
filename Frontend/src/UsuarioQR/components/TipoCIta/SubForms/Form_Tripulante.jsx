@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronUp, ChevronDown, CheckSquare, Square } from 'lucide-react';
+import Modal from '../../Principal/Modal';
+import { useNavigate } from 'react-router-dom';
 
 const Form_Tripulante = ({ onSubmit }) => {
     const [selectedCompany, setSelectedCompany] = useState("");
@@ -8,15 +10,18 @@ const Form_Tripulante = ({ onSubmit }) => {
     const [showCompanyOptions, setShowCompanyOptions] = useState(true);
     const [showServiceOptions, setShowServiceOptions] = useState(false);
     const [showCustomCompanyInput, setShowCustomCompanyInput] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     
     const companies = ["Princess", "Carnival", "NCL", "Hotel Carnival", "Otra"];
+    
+    const navigate = useNavigate();
     
     const handleCompanySelect = (company) => {
       setSelectedCompany(company);
       
       if (company === "Otra") {
         setShowCustomCompanyInput(true);
-        // Don't hide company options yet
+        // No ocultar opciones de empresa todavía
       } else {
         setShowCustomCompanyInput(false);
         setShowCompanyOptions(false);
@@ -46,10 +51,31 @@ const Form_Tripulante = ({ onSubmit }) => {
         setSelectedServices([...selectedServices, service]);
       }
     };
+      
+    const handleTurno = () => {
+      console.log("Redireccionando a página tipo de cita");
+      navigate("/turno");
+    }
+    
+    const handleClose = () => {
+      setShowModal(false);
+    };
+    
+    const handleGenerarTurno = () => {
+      handleTurno(); // Utiliza la función de navegación existente
+    };
+
+    const handleSubmit = () => {
+      if (selectedServices.length > 0) {
+        setShowModal(true);
+        // Alternativamente, puedes llamar directamente a onSubmit aquí en lugar de mostrar el modal
+        // onSubmit({ company: selectedCompany === "Otra" ? customCompany : selectedCompany, services: selectedServices });
+      }
+    };
     
     return (
       <div className="w-full transition-all duration-500 ease-in-out">
-        {/* Company Selection */}
+        {/* Selección de Empresa */}
         <div 
           className="flex items-center justify-between bg-blue-50 p-4 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"
           onClick={() => setShowCompanyOptions(!showCompanyOptions)}
@@ -98,46 +124,56 @@ const Form_Tripulante = ({ onSubmit }) => {
             )}
           </div>
         )}
-              {/* Services Selection */}
-      {showServiceOptions && (
-        <div className="mt-4 w-full transition-all duration-500 ease-in-out animate-slideInFromRight">
-          <div 
-            className="flex items-center justify-between bg-blue-50 p-4 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"
-            onClick={() => setShowServiceOptions(!showServiceOptions)}
-          >
-            <h3 className="text-xl font-medium text-blue-700">Seleccione Servicios</h3>
-            {showServiceOptions ? <ChevronUp className="text-blue-700" /> : <ChevronDown className="text-blue-700" />}
-          </div>
-          
-          <div className="mt-4 p-4 border border-blue-100 rounded-lg bg-white shadow-lg animate-fadeIn">
-            <div className="grid grid-cols-2 gap-3">
-              {services.map((service) => (
-                <div 
-                  key={service}
-                  className="flex items-center p-2 cursor-pointer hover:bg-blue-50 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-md"
-                  onClick={() => toggleService(service)}
-                >
-                  {selectedServices.includes(service) ? 
-                    <CheckSquare className="h-5 w-5 text-blue-600 mr-2" /> :
-                    <Square className="h-5 w-5 text-gray-400 mr-2" />
-                  }
-                  <span>{service}</span>
-                </div>
-              ))}
+        
+        {/* Selección de Servicios */}
+        {showServiceOptions && (
+          <div className="mt-4 w-full transition-all duration-500 ease-in-out animate-slideInFromRight">
+            <div 
+              className="flex items-center justify-between bg-blue-50 p-4 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"
+              onClick={() => setShowServiceOptions(!showServiceOptions)}
+            >
+              <h3 className="text-xl font-medium text-blue-700">Seleccione Servicios</h3>
+              {showServiceOptions ? <ChevronUp className="text-blue-700" /> : <ChevronDown className="text-blue-700" />}
             </div>
             
-            <button
-              className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
-              onClick={() => onSubmit({ company: selectedCompany === "Otra" ? customCompany : selectedCompany, services: selectedServices })}
-              disabled={selectedServices.length === 0}
-            >
-              Enviar Solicitud
-            </button>
+            <div className="mt-4 p-4 border border-blue-100 rounded-lg bg-white shadow-lg animate-fadeIn">
+              <div className="grid grid-cols-2 gap-3">
+                {services.map((service) => (
+                  <div 
+                    key={service}
+                    className="flex items-center p-2 cursor-pointer hover:bg-blue-50 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-md"
+                    onClick={() => toggleService(service)}
+                  >
+                    {selectedServices.includes(service) ? 
+                      <CheckSquare className="h-5 w-5 text-blue-600 mr-2" /> :
+                      <Square className="h-5 w-5 text-gray-400 mr-2" />
+                    }
+                    <span>{service}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <button
+                className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+                onClick={handleSubmit}
+                disabled={selectedServices.length === 0}
+              >
+                Enviar Solicitud
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
+        )}
+        
+        {/* Modal */}
+        {showModal && (
+          <Modal
+            onClose={handleClose}
+            onGenerarTurno={handleGenerarTurno}
+            variant="generarTurno"
+          />
+        )}
+      </div>
+    );
 };
 
 export default Form_Tripulante;
