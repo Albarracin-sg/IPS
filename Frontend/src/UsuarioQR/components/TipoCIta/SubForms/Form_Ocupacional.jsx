@@ -1,208 +1,109 @@
-// Importación de React y hooks necesarios
 import React, { useState } from "react";
+// Importación de íconos necesarios
 import { ChevronUp, ChevronDown, CheckSquare, Square } from "lucide-react";
+// Importación del componente Modal personalizado
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
 
-// Componente principal para formulario ocupacional
-const Form_Ocupacional = ({ onSubmit }) => {
-  // Estados para manejar la interacción del usuario
-  const [selectedCompany, setSelectedCompany] = useState("");
-  const [customCompany, setCustomCompany] = useState("");
-  const [selectedServices, setSelectedServices] = useState([]);
-  const [showCompanyOptions, setShowCompanyOptions] = useState(true);
-  const [showServiceOptions, setShowServiceOptions] = useState(false);
-  const [showCustomCompanyInput, setShowCustomCompanyInput] = useState(false);
+// Componente especializado para Paciente Ocupacional que recibe una prop onSubmit
+const PatienteOcupacional = ({ onSubmit }) => {
+  // Estados para manejar las opciones seleccionadas, expansión del formulario y visibilidad del modal
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
-  // Lista de empresas disponibles
-  const companies = [
-    "TECNAS",
-    "PROPLAS",
-    "HOTEL SANTA CLARA",
-    "HOTEL SANTA CLARA",
-    "Otra",
-  ];
+  // Opciones disponibles para seleccionar
+  const options = ["Laboratorio", "Medicina General"];
 
-  // Hook de navegación
+  // Función para alternar la selección de opciones
+  const toggleOption = (option) => {
+    if (selectedOptions.includes(option)) {
+      setSelectedOptions(selectedOptions.filter((item) => item !== option));
+    } else {
+      setSelectedOptions([...selectedOptions, option]);
+    }
+  };
+
+  // Hook para la navegación
   const navigate = useNavigate();
 
-  // Manejador de selección de empresa
-  const handleCompanySelect = (company) => {
-    setSelectedCompany(company);
-    if (company === "Otra") {
-      setShowCustomCompanyInput(true);
-    } else {
-      setShowCustomCompanyInput(false);
-      setShowCompanyOptions(false);
-      setShowServiceOptions(true);
-    }
-  };
-
-  // Manejador para envío de empresa personalizada
-  const handleCustomCompanySubmit = () => {
-    if (customCompany.trim()) {
-      setShowCompanyOptions(false);
-      setShowCustomCompanyInput(false);
-      setShowServiceOptions(true);
-    }
-  };
-
-  // Lista de servicios disponibles
-  const services = [
-    "Medicina General",
-    "Laboratorios",
-    "Rayos X",
-    "Medicina Ocupacional",
-    "Examen Ocupacional",
-  ];
-
-  // Manejador para alternar servicios seleccionados
-  const toggleService = (service) => {
-    setSelectedServices((prevServices) => {
-      if (prevServices.includes(service)) {
-        return prevServices.filter((item) => item !== service);
-      } else {
-        return [...prevServices, service];
-      }
-    });
-  };
-
-  // Funciones para manejo de navegación y modal
+  // Función para manejar la redirección al turno
   const handleTurno = () => {
     console.log("Redireccionando a página tipo de cita");
     navigate("/turno");
   };
 
+  // Función para cerrar el modal
   const handleClose = () => {
     setShowModal(false);
   };
 
+  // Función para generar el turno y navegar
   const handleGenerarTurno = () => {
     handleTurno();
   };
 
-  // Manejador para envío del formulario de servicios
-  const handleServiceSubmit = () => {
-    if (selectedServices.length > 0) {
+  // Función que se ejecuta al enviar el formulario
+  const handleSubmit = () => {
+    if (selectedOptions.length > 0) {
       setShowModal(true);
+      // También podría llamar directamente a onSubmit si es necesario
+      // onSubmit(selectedOptions);
     }
   };
 
   return (
-    // Contenedor principal del formulario
+    // Contenedor principal con animación de transición
     <div className="w-full transition-all duration-500 ease-in-out">
-      {/* Sección de selección de empresa */}
+      {/* Cabecera expandible/colapsable */}
       <div
         className="flex items-center justify-between bg-blue-50 p-4 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"
-        onClick={() => setShowCompanyOptions(!showCompanyOptions)}
+        onClick={() => setIsExpanded(!isExpanded)}
       >
         <h3 className="text-xl font-medium text-blue-700">
-          {selectedCompany
-            ? `Empresa: ${selectedCompany === "Otra" ? customCompany || "Otra" : selectedCompany}`
-            : "Seleccione Empresa"}
+          Seleccione Servicios Ocupacionales
         </h3>
-        {showCompanyOptions ? (
+        {/* Ícono dinámico según el estado de expansión */}
+        {isExpanded ? (
           <ChevronUp className="text-blue-700" />
         ) : (
           <ChevronDown className="text-blue-700" />
         )}
       </div>
 
-      {/* Lista de empresas */}
-      {showCompanyOptions && (
+      {/* Contenido expandible */}
+      {isExpanded && (
         <div className="mt-4 p-4 border border-blue-100 rounded-lg bg-white shadow-lg animate-fadeIn">
+          {/* Grid de opciones */}
           <div className="grid grid-cols-2 gap-3">
-            {companies.map((company) => (
+            {options.map((option) => (
               <div
-                key={company}
-                className={`p-3 border rounded-lg cursor-pointer transition-all duration-300 transform hover:translate-y-[-5px] ${
-                  selectedCompany === company
-                    ? "border-blue-500 bg-blue-50 shadow-md"
-                    : "border-gray-200 hover:border-blue-300 hover:shadow-md"
-                }`}
-                onClick={() => handleCompanySelect(company)}
+                key={option}
+                className="flex items-center p-2 cursor-pointer hover:bg-blue-50 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-md"
+                onClick={() => toggleOption(option)}
               >
-                {company}
+                {/* Checkbox personalizado */}
+                {selectedOptions.includes(option) ? (
+                  <CheckSquare className="h-5 w-5 text-blue-600 mr-2" />
+                ) : (
+                  <Square className="h-5 w-5 text-gray-400 mr-2" />
+                )}
+                <span>{option}</span>
               </div>
             ))}
           </div>
 
-          {/* Input para empresa personalizada */}
-          {showCustomCompanyInput && (
-            <div className="mt-4 animate-fadeIn">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre de la empresa
-              </label>
-              <input
-                type="text"
-                value={customCompany}
-                onChange={(e) => setCustomCompany(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                placeholder="Ingrese nombre de la empresa"
-                autoFocus
-              />
-              <button
-                className="cursor-pointer mt-3 w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md"
-                onClick={handleCustomCompanySubmit}
-                disabled={!customCompany.trim()}
-              >
-                Continuar
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Sección de selección de servicios */}
-      {showServiceOptions && (
-        <div className="mt-4 w-full transition-all duration-500 ease-in-out animate-slideInFromRight">
-          <div
-            className="flex items-center justify-between bg-blue-50 p-4 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"
-            onClick={() => setShowServiceOptions(!showServiceOptions)}
+          {/* Botón de envío */}
+          <button
+            className="cursor-pointer mt-6 w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+            onClick={handleSubmit}
+            disabled={selectedOptions.length === 0}
           >
-            <h3 className="text-xl font-medium text-blue-700">
-              Seleccione Servicios
-            </h3>
-            {showServiceOptions ? (
-              <ChevronUp className="text-blue-700" />
-            ) : (
-              <ChevronDown className="text-blue-700" />
-            )}
-          </div>
-
-          {/* Lista de servicios */}
-          <div className="mt-4 p-4 border border-blue-100 rounded-lg bg-white shadow-lg animate-fadeIn">
-            <div className="grid grid-cols-2 gap-3">
-              {services.map((service) => (
-                <div
-                  key={service}
-                  className="flex items-center p-2 cursor-pointer hover:bg-blue-50 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-md"
-                  onClick={() => toggleService(service)}
-                >
-                  {selectedServices.includes(service) ? (
-                    <CheckSquare className="h-5 w-5 text-blue-600 mr-2" />
-                  ) : (
-                    <Square className="h-5 w-5 text-gray-400 mr-2" />
-                  )}
-                  <span>{service}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Botón de envío */}
-            <button
-              className="cursor-pointer mt-6 w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
-              onClick={handleServiceSubmit}
-              disabled={selectedServices.length === 0}
-            >
-              Enviar Solicitud
-            </button>
-          </div>
+            Enviar Solicitud
+          </button>
         </div>
       )}
-
-      {/* Modal de confirmación */}
+      {/* Modal para generar turno */}
       {showModal && (
         <Modal
           onClose={handleClose}
@@ -214,5 +115,4 @@ const Form_Ocupacional = ({ onSubmit }) => {
   );
 };
 
-// Exportación del componente
-export default Form_Ocupacional;
+export default PatienteOcupacional;

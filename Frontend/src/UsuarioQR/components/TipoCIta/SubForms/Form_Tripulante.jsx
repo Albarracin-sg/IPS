@@ -1,61 +1,11 @@
-// Importación de React y hooks necesarios
 import React, { useState } from "react";
+// Importación de íconos necesarios
 import { ChevronUp, ChevronDown, CheckSquare, Square } from "lucide-react";
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
 
-// Componente de formulario para tripulantes
 const Form_Tripulante = ({ onSubmit }) => {
-  // Estado para almacenar los datos del formulario
-  const [formData, setFormData] = useState({
-    nombre: "",
-    cedula: "",
-    email: "",
-    naviera: "",
-  });
-
-  // Estado para manejar errores de validación
-  const [errors, setErrors] = useState({});
-
-  // Función para validar el formulario
-  const validateForm = () => {
-    let tempErrors = {};
-    if (!formData.nombre) tempErrors.nombre = "El nombre es requerido";
-    if (!formData.cedula) {
-      tempErrors.cedula = "La cédula es requerida";
-    } else if (!/^[0-9]+$/.test(formData.cedula)) {
-      tempErrors.cedula = "Solo se permiten números";
-    }
-    if (!formData.email) {
-      tempErrors.email = "El correo es requerido";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
-    ) {
-      tempErrors.email = "Correo electrónico inválido";
-    }
-    if (!formData.naviera) tempErrors.naviera = "La naviera es requerida";
-
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
-
-  // Manejador de cambios en los campos del formulario
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  // Manejador del envío del formulario
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      onSubmit(formData);
-    }
-  };
-
+  // Estados para manejar la selección de empresa y servicios
   const [selectedCompany, setSelectedCompany] = useState("");
   const [customCompany, setCustomCompany] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
@@ -64,10 +14,13 @@ const Form_Tripulante = ({ onSubmit }) => {
   const [showCustomCompanyInput, setShowCustomCompanyInput] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  // Lista de empresas disponibles
   const companies = ["Princess", "Carnival", "NCL", "Hotel Carnival", "Otra"];
 
+  // Hook para la navegación
   const navigate = useNavigate();
 
+  // Maneja la selección de una empresa
   const handleCompanySelect = (company) => {
     setSelectedCompany(company);
 
@@ -81,6 +34,7 @@ const Form_Tripulante = ({ onSubmit }) => {
     }
   };
 
+  // Maneja el envío de una empresa personalizada
   const handleCustomCompanySubmit = () => {
     if (customCompany.trim()) {
       setShowCompanyOptions(false);
@@ -89,6 +43,7 @@ const Form_Tripulante = ({ onSubmit }) => {
     }
   };
 
+  // Lista de servicios disponibles (condicional si es NCL)
   const services = [
     "Medicina General",
     "Laboratorios",
@@ -96,6 +51,7 @@ const Form_Tripulante = ({ onSubmit }) => {
     ...(selectedCompany !== "NCL" ? ["Odontología"] : []),
   ];
 
+  // Alterna la selección de servicios
   const toggleService = (service) => {
     if (selectedServices.includes(service)) {
       setSelectedServices(selectedServices.filter((item) => item !== service));
@@ -104,6 +60,7 @@ const Form_Tripulante = ({ onSubmit }) => {
     }
   };
 
+  // Funciones para manejo de navegación y modal
   const handleTurno = () => {
     console.log("Redireccionando a página tipo de cita");
     navigate("/turno");
@@ -114,101 +71,21 @@ const Form_Tripulante = ({ onSubmit }) => {
   };
 
   const handleGenerarTurno = () => {
-    handleTurno(); // Utiliza la función de navegación existente
+    handleTurno();
   };
 
-  const handleServiceSubmit = () => {
+  // Maneja el envío del formulario
+  const handleSubmit = () => {
     if (selectedServices.length > 0) {
       setShowModal(true);
-      // Alternativamente, puedes llamar directamente a onSubmit aquí en lugar de mostrar el modal
+      // También se podría llamar directamente a onSubmit aquí
       // onSubmit({ company: selectedCompany === "Otra" ? customCompany : selectedCompany, services: selectedServices });
     }
   };
 
   return (
     <div className="w-full transition-all duration-500 ease-in-out">
-      {/* Formulario de datos personales */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Campo de Nombre */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Nombre Completo
-          </label>
-          <input
-            type="text"
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-          {errors.nombre && (
-            <span className="text-red-500 text-sm">{errors.nombre}</span>
-          )}
-        </div>
-
-        {/* Campo de Cédula */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Cédula
-          </label>
-          <input
-            type="text"
-            name="cedula"
-            value={formData.cedula}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-          {errors.cedula && (
-            <span className="text-red-500 text-sm">{errors.cedula}</span>
-          )}
-        </div>
-
-        {/* Campo de Correo Electrónico */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Correo Electrónico
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-          {errors.email && (
-            <span className="text-red-500 text-sm">{errors.email}</span>
-          )}
-        </div>
-
-        {/* Campo de Naviera */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Naviera
-          </label>
-          <input
-            type="text"
-            name="naviera"
-            value={formData.naviera}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-          {errors.naviera && (
-            <span className="text-red-500 text-sm">{errors.naviera}</span>
-          )}
-        </div>
-
-        {/* Botón de envío del formulario */}
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Enviar
-          </button>
-        </div>
-      </form>
-
-      {/* Selección de Empresa */}
+      {/* Sección de selección de empresa */}
       <div
         className="flex items-center justify-between bg-blue-50 p-4 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"
         onClick={() => setShowCompanyOptions(!showCompanyOptions)}
@@ -218,6 +95,7 @@ const Form_Tripulante = ({ onSubmit }) => {
             ? `Empresa: ${selectedCompany === "Otra" ? customCompany || "Otra" : selectedCompany}`
             : "Seleccione Empresa"}
         </h3>
+        {/* Ícono de expansión/colapso */}
         {showCompanyOptions ? (
           <ChevronUp className="text-blue-700" />
         ) : (
@@ -225,6 +103,7 @@ const Form_Tripulante = ({ onSubmit }) => {
         )}
       </div>
 
+      {/* Lista de empresas disponibles */}
       {showCompanyOptions && (
         <div className="mt-4 p-4 border border-blue-100 rounded-lg bg-white shadow-lg animate-fadeIn">
           <div className="grid grid-cols-2 gap-3">
@@ -268,7 +147,7 @@ const Form_Tripulante = ({ onSubmit }) => {
         </div>
       )}
 
-      {/* Selección de Servicios */}
+      {/* Sección de selección de servicios */}
       {showServiceOptions && (
         <div className="mt-4 w-full transition-all duration-500 ease-in-out animate-slideInFromRight">
           <div
@@ -305,7 +184,7 @@ const Form_Tripulante = ({ onSubmit }) => {
 
             <button
               className="cursor-pointer mt-6 w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
-              onClick={handleServiceSubmit}
+              onClick={handleSubmit}
               disabled={selectedServices.length === 0}
             >
               Enviar Solicitud
@@ -314,7 +193,7 @@ const Form_Tripulante = ({ onSubmit }) => {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal de confirmación */}
       {showModal && (
         <Modal
           onClose={handleClose}
@@ -326,5 +205,4 @@ const Form_Tripulante = ({ onSubmit }) => {
   );
 };
 
-// Exportación del componente
 export default Form_Tripulante;

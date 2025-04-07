@@ -1,19 +1,17 @@
-// Importación de React y el hook useState para manejar el estado
 import React, { useState } from "react";
 
-// Importación de los componentes de formularios específicos
+// Importación de los sub-formularios específicos
 import Form_Particular from "./SubForms/Form_Particular";
 import Form_Tripulante from "./SubForms/Form_Tripulante";
 import Form_Ocupacional from "./SubForms/Form_Ocupacional";
 
-// Componente principal para el registro de usuarios
 export default function RegistroUsuario() {
   // Estados para manejar la opción seleccionada, datos del formulario y mensaje de confirmación
   const [selectedOption, setSelectedOption] = useState(null);
   const [formData, setFormData] = useState({});
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  // Array de opciones disponibles para el tipo de usuario
+  // Array de opciones disponibles para el registro
   const opciones = [
     { id: "paciente-particular", nombre: "Paciente Particular" },
     { id: "tripulante-naviera", nombre: "Tripulante - Naviera" },
@@ -30,7 +28,7 @@ export default function RegistroUsuario() {
   const handleSubmit = (data) => {
     setFormData({ type: selectedOption, ...data });
     setShowConfirmation(true);
-    console.log("Formulario enviado:", { type: selectedOption, ...data });
+    console.log("Form submitted:", { type: selectedOption, ...data });
   };
 
   // Función que renderiza el formulario específico según la opción seleccionada
@@ -48,9 +46,8 @@ export default function RegistroUsuario() {
   };
 
   return (
-    // Contenedor principal con estilos de Tailwind CSS
+    // Contenedor principal con diseño centrado
     <div className="flex flex-col items-center w-full max-w-5xl p-6 rounded-lg bg-white shadow-xl">
-      {/* Título del formulario */}
       <h2 className="text-center text-3xl font-semibold text-gray-800 mb-6">
         Registro de Usuario
       </h2>
@@ -61,23 +58,22 @@ export default function RegistroUsuario() {
           <label className="block text-center font-medium text-gray-700 mb-4">
             Selecciona una opción
           </label>
-          {/* Contenedor de opciones con diseño flexible */}
+          {/* Grid de opciones disponibles */}
           <div className="flex justify-center space-x-4">
             {opciones.map((opcion) => (
-              // Tarjeta de opción con estilos condicionales
               <div
                 key={opcion.id}
                 onClick={() => handleOptionClick(opcion.id)}
                 className={`
-                                    text-center w-40 h-24 flex items-center justify-center p-4
-                                    rounded-lg border-2 transition-all duration-500
-                                    ${
-                                      selectedOption === opcion.id
-                                        ? "border-blue-500 bg-blue-100 transform scale-110 shadow-lg"
-                                        : "border-gray-300 bg-gray-100 hover:border-blue-300 hover:shadow-md"
-                                    }
-                                    cursor-pointer
-                                `}
+                    text-center w-40 h-24 flex items-center justify-center p-4
+                    rounded-lg border-2 transition-all duration-500
+                    ${
+                      selectedOption === opcion.id
+                        ? "border-blue-500 bg-blue-100 transform scale-110 shadow-lg"
+                        : "border-gray-300 bg-gray-100 hover:border-blue-300 hover:shadow-md"
+                    }
+                    cursor-pointer
+                  `}
               >
                 <span className="text-gray-800 font-medium">
                   {opcion.nombre}
