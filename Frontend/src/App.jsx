@@ -1,12 +1,11 @@
-//import { BrowserRouter } from "react-router-dom";
-//import AppRoutes from "./routes/AppRoutes";
-import Principal_Pag from "./Pages/PagUsuario/Principal_Pag";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+
 function App() {
   return (
-    /*<BrowserRouter>
+    <BrowserRouter>
       <AppRoutes />
-    </BrowserRouter>*/
-    <Principal_Pag />
+    </BrowserRouter>
   );
 }
 
