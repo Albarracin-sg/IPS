@@ -42,7 +42,9 @@ const RegisterForm = () => {
   // Función para manejar el registro
   const handleRegister = () => {
     // Esta función no debería usarse en esta variante
-    console.log("Función de registro llamada pero no se usa en variante consulta");
+    console.log(
+      "Función de registro llamada pero no se usa en variante consulta"
+    );
   };
 
   // envía los datos y redirecciona
@@ -431,7 +433,7 @@ const RegisterForm = () => {
           <button
             type="submit"
             form="registrationForm"
-            className="w-64 py-3 px-4 bg-gradient-to-r from-emerald-400 to-blue-500 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 hover:opacity-50 shadow-lg"
+            className="cursor-pointer w-64 py-3 px-4 bg-gradient-to-r from-emerald-400 to-blue-500 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 hover:opacity-50 shadow-lg"
           >
             ENVIAR
           </button>
