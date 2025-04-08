@@ -113,7 +113,7 @@ export default function Inicio() {
 
                     <button 
                         onClick={handleSubmit}
-                        className="w-full sm:w-auto px-6 py-2 sm:py-3 bg-gradient-to-r from-emerald-400 to-blue-500 text-white font-medium rounded-full transition-all duration-300 transform hover:scale-105 hover:opacity-90 shadow-md"
+                        className="cursor-pointer w-full sm:w-auto px-6 py-2 sm:py-3 bg-gradient-to-r from-emerald-400 to-blue-500 text-white font-medium rounded-full transition-all duration-300 transform hover:scale-105 hover:opacity-90 shadow-md"
                     >
                         Buscar
                     </button>
@@ -441,7 +441,7 @@ export default function Inicio() {
                 <div className="flex justify-center mt-6 sm:mt-8">
                     <button
                         onClick={handleSave}
-                        className="w-full sm:w-64 py-2 sm:py-3 px-4 bg-gradient-to-r from-emerald-400 to-blue-500 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 hover:opacity-90 shadow-lg"
+                        className="cursor-pointer w-full sm:w-64 py-2 sm:py-3 px-4 bg-gradient-to-r from-emerald-400 to-blue-500 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 hover:opacity-90 shadow-lg"
                     >
                         GUARDAR
                     </button>
