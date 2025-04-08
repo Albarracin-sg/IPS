@@ -3,6 +3,7 @@ import PrincipaPage from "../pages/PagUsuario/Principal_Pag";
 import RegisterForm from "../pages/PagUsuario/Register_Pag";
 import Ticket from "../pages/PagUsuario/Turnos_Pag";
 import TipoCita from "../pages/PagUsuario/TipoCita_Pag";
+import OdontologiaPage from "../Pages/PagOperador/Odontologia/Odontologia_Pag";
 
 function AppRoutes() {
   return (
@@ -12,6 +13,7 @@ function AppRoutes() {
       <Route path="/turno" element={<Ticket />} />
       <Route path="/registro" element={<RegisterForm />} />
       <Route path="/TipoCita" element={<TipoCita />} />
+      <Route path="/OdontologiaOp" element={<OdontologiaPage />} />
     </Routes>
   );
 }
