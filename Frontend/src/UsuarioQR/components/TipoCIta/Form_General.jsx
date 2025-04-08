@@ -51,7 +51,7 @@ export default function RegistroUsuario() {
       <h2 className="text-center text-3xl font-semibold text-gray-800 mb-6">
         Registro de Usuario
       </h2>
-
+      <div className="h-1.5 w-20 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full mx-auto mb-4 -mt-4"></div>
       <div className="flex flex-col items-center w-full">
         {/* Sección de selección de tipo de usuario */}
         <div className="mb-6 w-full">
