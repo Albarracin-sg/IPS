@@ -13,7 +13,6 @@ function AppRoutes() {
       <Route path="/" element={<PrincipaPage />} />
       <Route path="/registro" element={<RegisterForm />} />
       <Route path="/turno" element={<Ticket />} />
-      <Route path="/registro" element={<RegisterForm />} />
       <Route path="/TipoCita" element={<TipoCita />} />
       <Route path="/Screen" element={<Screen />} />
       {/* Rutas de Operador-Doctor */}
