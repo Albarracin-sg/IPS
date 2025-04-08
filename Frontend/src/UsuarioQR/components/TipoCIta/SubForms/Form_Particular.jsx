@@ -3,6 +3,20 @@ import { CheckSquare, Square, ChevronDown, ChevronUp } from "lucide-react";
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
 
+// Importaciones desde "lucide-react":
+// 1. ChevronUp: Es un ícono que representa una flecha apuntando hacia arriba. 
+//    Se utiliza para indicar que un elemento (como un panel o sección) está expandido.
+// 2. ChevronDown: Es un ícono que representa una flecha apuntando hacia abajo. 
+//    Se utiliza para indicar que un elemento está colapsado o puede expandirse.
+// 3. CheckSquare: Es un ícono que representa un cuadro con una marca de verificación. 
+//    Se usa para mostrar que una opción está seleccionada.
+// 4. Square: Es un ícono que representa un cuadro vacío. 
+//    Se utiliza para mostrar que una opción no está seleccionada.
+
+// Estos íconos están ubicados en el componente dentro de:
+// - La cabecera expandible/colapsable: ChevronUp y ChevronDown se usan dinámicamente para mostrar el estado de expansión del formulario.
+// - Las opciones seleccionables: CheckSquare y Square se usan para mostrar visualmente si una opción está seleccionada o no.
+
 // Componente especializado para pacientes particulares que recibe una función onSubmit como prop
 const PatientParticular = ({ onSubmit }) => {
   // Estados para manejar las opciones seleccionadas, expansión del formulario y visibilidad del modal

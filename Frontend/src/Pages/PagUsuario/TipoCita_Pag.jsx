@@ -6,14 +6,16 @@ import RegistroUsuario from "../../UsuarioQR/components/TipoCIta/Form_General"; 
 const TipoCita = () => {
   return (
     // Contenedor principal con estilos de Tailwind CSS
-    // - min-h-screen: asegura altura mínima del 100% de la pantalla
-    // - w-screen: ancho completo de la ventana
-    // - bg-blue-300: color de fondo azul claro
-    // - flex con justify-center y items-center: centra el contenido
-    // - overflow-auto: permite desplazamiento si el contenido excede la pantalla
-    <div className="relative min-h-screen w-screen bg-blue-300 flex justify-center items-center overflow-auto">
-      <LogoInicio /> {/* Renderiza el componente del logo */}
-      <RegistroUsuario /> {/* Renderiza el formulario de tipo de cita */}
+    <div className="relative min-h-screen w-screen bg-blue-300 flex flex-col items-center overflow-auto">
+      {/* Contenedor del logo con espacio adecuado */}
+      <div className="mt-8 mb-6">
+        <LogoInicio />
+      </div>
+
+      {/* Contenedor para centrar el RegistroUsuario */}
+      <div className="flex flex-1 justify-center items-center w-full">
+        <RegistroUsuario />
+      </div>
     </div>
   );
 };
