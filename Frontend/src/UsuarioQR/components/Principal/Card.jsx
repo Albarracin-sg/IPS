@@ -23,7 +23,7 @@ export default function Card({ modo, onSubmitSuccess }) {
         } else {
             navigate("/registro");
         }
-        
+
         if (onSubmitSuccess) {
             onSubmitSuccess();
         }
