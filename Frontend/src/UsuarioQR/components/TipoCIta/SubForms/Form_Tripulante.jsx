@@ -13,6 +13,13 @@ const Form_Tripulante = ({ onSubmit }) => {
   const [showServiceOptions, setShowServiceOptions] = useState(false);
   const [showCustomCompanyInput, setShowCustomCompanyInput] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  
+  // Estado para almacenar datos completos que se pasarán al modal
+  const [formData, setFormData] = useState({
+    type: "tripulante-naviera",
+    selectedOptions: [],
+    company: ""
+  });
 
   // Lista de empresas disponibles
   const companies = ["Princess", "Carnival", "NCL", "Hotel Carnival", "Otra"];
@@ -35,8 +42,25 @@ const Form_Tripulante = ({ onSubmit }) => {
     if (selectedCompany) {
       const services = getServices(selectedCompany);
       setSelectedServices(services); // Seleccionar todos los servicios por defecto
+      
+      // Actualizar formData cuando cambia la empresa
+      setFormData({
+        ...formData,
+        company: selectedCompany === "Otra" ? customCompany : selectedCompany,
+        selectedOptions: services
+      });
     }
   }, [selectedCompany]);
+
+  // Efecto para actualizar formData cuando cambia la empresa personalizada
+  useEffect(() => {
+    if (selectedCompany === "Otra" && customCompany) {
+      setFormData({
+        ...formData,
+        company: customCompany
+      });
+    }
+  }, [customCompany]);
 
   // Maneja la selección de una empresa
   const handleCompanySelect = (company) => {
@@ -63,11 +87,20 @@ const Form_Tripulante = ({ onSubmit }) => {
 
   // Alterna la selección de servicios
   const toggleService = (service) => {
+    let updatedServices;
     if (selectedServices.includes(service)) {
-      setSelectedServices(selectedServices.filter((item) => item !== service));
+      updatedServices = selectedServices.filter((item) => item !== service);
     } else {
-      setSelectedServices([...selectedServices, service]);
+      updatedServices = [...selectedServices, service];
     }
+    
+    setSelectedServices(updatedServices);
+    
+    // Actualizar formData cuando cambian los servicios seleccionados
+    setFormData({
+      ...formData,
+      selectedOptions: updatedServices
+    });
   };
 
   // Funciones para manejo de navegación y modal
@@ -87,9 +120,12 @@ const Form_Tripulante = ({ onSubmit }) => {
   // Maneja el envío del formulario
   const handleSubmit = () => {
     if (selectedServices.length > 0) {
+      // Llamar al onSubmit pasado como prop con los datos necesarios
+      onSubmit({
+        company: selectedCompany === "Otra" ? customCompany : selectedCompany,
+        services: selectedServices
+      });
       setShowModal(true);
-      // También se podría llamar directamente a onSubmit aquí
-      // onSubmit({ company: selectedCompany === "Otra" ? customCompany : selectedCompany, services: selectedServices });
     }
   };
 
@@ -209,6 +245,7 @@ const Form_Tripulante = ({ onSubmit }) => {
           onClose={handleClose}
           onGenerarTurno={handleGenerarTurno}
           variant="generarTurno"
+          userData={formData} // Pasamos los datos completos al modal
         />
       )}
     </div>
