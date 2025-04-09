@@ -14,16 +14,21 @@ import MedicinaGeneralPage from "../pages/PagOperador/Especializaciones/Medicina
 import VacuancionesPage from "../pages/PagOperador/Especializaciones/Vacunacion_Pag";
 import SueroterapiaPage from "../pages/PagOperador/Especializaciones/Sueroterapia_Pag";
 
+import PagMainOp from "../pages/PagOperador/OperadorNormal/Operador";
+
 function AppRoutes() {
   return (
     <Routes>
+      {/* Rutas de Usuario */}
       <Route path="/" element={<PrincipaPage />} />
       <Route path="/registro" element={<RegisterForm />} />
       <Route path="/turno" element={<Ticket />} />
       <Route path="/TipoCita" element={<TipoCita />} />
+
+      {/* Ruta del televisor */}
       <Route path="/Screen" element={<Screen />} />
       
-      {/* Rutas de Operador-Doctor */}
+      {/* Rutas de Especializaciones-Doctor */}
       <Route path="/OdontologiaOp" element={<OdontologiaPage />} />
       <Route path="/MedicinaAlternativaOp" element={<MedicinaAlternativaPage />} />
       <Route path="/EsteticaOp" element={<EsteticaPage />} />
@@ -32,6 +37,10 @@ function AppRoutes() {
       <Route path="/MedicinaGeneralOp" element={<MedicinaGeneralPage />} />
       <Route path="/VacunacionOp" element={<VacuancionesPage />} />
       <Route path="/SueroterapiaOp" element={<SueroterapiaPage />} />
+
+      {/* Rutas de Operador */}
+      <Route path="/mainOp" element={<PagMainOp />} />
+
     </Routes>
   );
 }
