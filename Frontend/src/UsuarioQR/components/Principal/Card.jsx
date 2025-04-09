@@ -1,26 +1,34 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import Button from "./button";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
 
-export default function Card() {
+export default function Card({ modo, onSubmitSuccess }) {
     const [showModal, setShowModal] = useState(false);
-
+    const navigate = useNavigate();
+    
     const handleConsultarCita = () => {
         setShowModal(true);
     };
-
+    
     const handleCloseModal = () => {
         setShowModal(false);
     };
-
-    const navigate = useNavigate(); 
-
+    
     const handleRedirect = () => {
-        console.log("Redireccionando a página de registro");
-        navigate("/registro"); 
-    }
+        setShowModal(false); // Cierra el modal si estaba abierto
+        
+        if (modo === "op") {
 
+        } else {
+            navigate("/registro");
+        }
+        
+        if (onSubmitSuccess) {
+            onSubmitSuccess();
+        }
+    };
+   
     return (
         <>
             <div className="bg-white shadow-xl rounded-2xl p-8 w-[350px] mx-auto flex justify-center items-center flex-col backdrop-blur-lg border border-gray-100">
@@ -28,7 +36,7 @@ export default function Card() {
                     <h2 className="text-2xl font-bold text-gray-800 mb-1">REGISTRO DE PACIENTES</h2>
                     <div className="h-1 w-20 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full mx-auto"></div>
                 </div>
-                
+               
                 <div className="relative w-full mb-6">
                     <input
                         type="text"
@@ -41,14 +49,13 @@ export default function Card() {
                         </svg>
                     </div>
                 </div>
-                
+               
                 <Button text="Consultar Cita" tipo="ConsultarCita" onClick={handleConsultarCita} />
                 <Button text="Registrar" tipo="registro" onClick={handleRedirect} />
             </div>
-
             {showModal && (
-                <Modal 
-                    onClose={handleCloseModal} 
+                <Modal
+                    onClose={handleCloseModal}
                     onRegister={handleRedirect}
                 />
             )}

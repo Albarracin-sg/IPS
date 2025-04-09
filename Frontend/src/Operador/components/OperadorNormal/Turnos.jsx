@@ -1,7 +1,8 @@
 import React from "react";
+import NewTurn from "./NewTurn/NewForm";
 
-export default function Turnos() {
-  // Sample data for display purposes
+export default function Turnos({ setComponenteActual }) {
+  // Datos de muestra para propósitos de visualización
   const samplePatients = [
     { PrimerNombre: "Juan", PrimerApellido: "Pérez", Turno: "T001", module: "A" },
     { PrimerNombre: "María", PrimerApellido: "López", Turno: "T002", module: "B" },
@@ -13,15 +14,15 @@ export default function Turnos() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-200 to-blue-300 p-4">
       <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-4xl w-full transition-all duration-300 hover:shadow-2xl">
-        {/* Header with improved gradient */}
+        {/* Encabezado con gradiente mejorado */}
         <header className="p-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
-          <h2 className="text-2xl font-bold tracking-tight">Gestión de Turnos Odontologia</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Gestión de Turnos</h2>
           <p className="text-sm opacity-90 mt-1">
             Sistema de administración de cola de espera
           </p>
         </header>
         
-        {/* Table with improved styling */}
+        {/* Tabla con estilos mejorados */}
         <div className="w-full overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -61,7 +62,7 @@ export default function Turnos() {
           </table>
         </div>
         
-        {/* Footer with improved button styling */}
+        {/* Pie de página con estilos de botones mejorados */}
         <footer className="p-5 bg-gray-50 border-t border-gray-100 flex flex-wrap gap-3 justify-between items-center">
           <div className="flex gap-2">
             <button className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm">
@@ -79,7 +80,9 @@ export default function Turnos() {
               </svg>
               Siguiente Turno
             </button>
-            <button className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm flex items-center">
+            <button 
+              onClick={() => setComponenteActual(<NewTurn />)}
+              className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
               </svg>
