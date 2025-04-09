@@ -15,7 +15,7 @@ export default function Turnos() {
       <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-4xl w-full transition-all duration-300 hover:shadow-2xl">
         {/* Header with improved gradient */}
         <header className="p-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
-          <h2 className="text-2xl font-bold tracking-tight">Gestión de Turnos</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Gestión de Turnos Estetica</h2>
           <p className="text-sm opacity-90 mt-1">
             Sistema de administración de cola de espera
           </p>
