@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import { ChevronUp, ChevronDown, CheckSquare, Square } from "lucide-react";
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
+import SubmitButton from "../SubmitButton"; // Asegúrate de ajustar la ruta
 
-const Form_Tripulante = ({ onSubmit }) => {
+const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   // Estados para manejar la selección de empresa y servicios
   const [selectedCompany, setSelectedCompany] = useState("");
   const [customCompany, setCustomCompany] = useState("");
@@ -68,7 +69,6 @@ const Form_Tripulante = ({ onSubmit }) => {
 
     if (company === "Otra") {
       setShowCustomCompanyInput(true);
-      // No ocultar opciones de empresa todavía
     } else {
       setShowCustomCompanyInput(false);
       setShowCompanyOptions(false);
@@ -103,18 +103,28 @@ const Form_Tripulante = ({ onSubmit }) => {
     });
   };
 
-  // Funciones para manejo de navegación y modal
-  const handleTurno = () => {
-    console.log("Redireccionando a página tipo de cita");
-    navigate("/turno");
+  // Función para manejar la acción del botón en el modal
+  const handleTipoDeCita = () => {
+    // Log form data as JSON to console
+    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
+    
+    // Cierra el modal
+    setShowModal(false);
+    
+    if (modo === "op") {
+      // En modo "op", llama a la función callback en lugar de redireccionar
+      if (onSubmitSuccess) {
+        onSubmitSuccess("datosRegistro");
+      }
+    } else {
+      // En modo normal, redirige a la página de tipo de cita
+      navigate("/TipoCita");
+    }
   };
 
+  // Funciones para manejo del modal
   const handleClose = () => {
     setShowModal(false);
-  };
-
-  const handleGenerarTurno = () => {
-    handleTurno();
   };
 
   // Maneja el envío del formulario
@@ -228,13 +238,11 @@ const Form_Tripulante = ({ onSubmit }) => {
               ))}
             </div>
 
-            <button
-              className="cursor-pointer mt-6 w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+            <SubmitButton
               onClick={handleSubmit}
               disabled={selectedServices.length === 0}
-            >
-              Enviar Solicitud
-            </button>
+              text="Enviar Solicitud"
+            />
           </div>
         </div>
       )}
@@ -243,9 +251,15 @@ const Form_Tripulante = ({ onSubmit }) => {
       {showModal && (
         <Modal
           onClose={handleClose}
-          onGenerarTurno={handleGenerarTurno}
+          onGenerarTurno={() => {
+            handleClose();
+            if (modo === "op") {
+              onSubmitSuccess("mostrarTicket");
+            } else {
+              handleTipoDeCita();
+            }
+          }}
           variant="generarTurno"
-          userData={formData} // Pasamos los datos completos al modal
         />
       )}
     </div>

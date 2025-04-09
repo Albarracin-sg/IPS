@@ -2,27 +2,19 @@ import React, { useState } from "react";
 import { CheckSquare, Square, ChevronDown, ChevronUp } from "lucide-react";
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
+import SubmitButton from "../SubmitButton"; // Asegúrate de ajustar la ruta
 
-// Importaciones desde "lucide-react":
-// 1. ChevronUp: Es un ícono que representa una flecha apuntando hacia arriba. 
-//    Se utiliza para indicar que un elemento (como un panel o sección) está expandido.
-// 2. ChevronDown: Es un ícono que representa una flecha apuntando hacia abajo. 
-//    Se utiliza para indicar que un elemento está colapsado o puede expandirse.
-// 3. CheckSquare: Es un ícono que representa un cuadro con una marca de verificación. 
-//    Se usa para mostrar que una opción está seleccionada.
-// 4. Square: Es un ícono que representa un cuadro vacío. 
-//    Se utiliza para mostrar que una opción no está seleccionada.
-
-// Estos íconos están ubicados en el componente dentro de:
-// - La cabecera expandible/colapsable: ChevronUp y ChevronDown se usan dinámicamente para mostrar el estado de expansión del formulario.
-// - Las opciones seleccionables: CheckSquare y Square se usan para mostrar visualmente si una opción está seleccionada o no.
-
-// Componente especializado para pacientes particulares que recibe una función onSubmit como prop
-const PatientParticular = ({ onSubmit, modo, onSubmitSuccess }) => {
+const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   // Estados para manejar las opciones seleccionadas, expansión del formulario y visibilidad del modal
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  
+  // Datos completos del formulario
+  const formData = {
+    type: "paciente-particular",
+    selectedOptions: selectedOptions
+  };
   
   // Lista de especialidades médicas disponibles
   const options = [
@@ -44,18 +36,22 @@ const PatientParticular = ({ onSubmit, modo, onSubmitSuccess }) => {
     setShowModal(false);
   };
   
-  // Función para manejar la redirección o ejecución según el modo
-  const handleRedirect = () => {
-    setShowModal(false); // Cierra el modal si estaba abierto
+  // Función para manejar la acción del botón "Generar Turno" en el modal
+  const handleTipoDeCita = () => {
+    // Log form data as JSON to console
+    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
+    
+    // Cierra el modal
+    setShowModal(false);
     
     if (modo === "op") {
-      // En modo operador, no redirigimos, sino que ejecutamos onSubmitSuccess
+      // En modo "op", llama a la función callback en lugar de redireccionar
       if (onSubmitSuccess) {
-        onSubmitSuccess("cargarRegistro", selectedOptions);
+        onSubmitSuccess("datosRegistro");
       }
     } else {
-      // En modo normal, redirigimos a la página de turno
-      navigate("/turno");
+      // En modo normal, redirige a la página de tipo de cita
+      navigate("/TipoCita");
     }
   };
   
@@ -65,6 +61,14 @@ const PatientParticular = ({ onSubmit, modo, onSubmitSuccess }) => {
       setSelectedOptions(selectedOptions.filter((item) => item !== option));
     } else {
       setSelectedOptions([...selectedOptions, option]);
+    }
+  };
+  
+  // Función para manejar el envío del formulario
+  const handleSubmit = () => {
+    if (selectedOptions.length > 0) {
+      onSubmit(selectedOptions);
+      setShowModal(true);
     }
   };
 
@@ -110,23 +114,26 @@ const PatientParticular = ({ onSubmit, modo, onSubmitSuccess }) => {
             </div>
 
             {/* Botón de envío */}
-            <button
-              className="cursor-pointer mt-6 w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
-              onClick={() => {
-                onSubmit(selectedOptions);
-                setShowModal(true); // Muestra el modal después de enviar
-              }}
+            <SubmitButton
+              onClick={handleSubmit}
               disabled={selectedOptions.length === 0}
-            >
-              Enviar Solicitud
-            </button>
+              text="Enviar Solicitud"
+            />
           </div>
         )}
+        
         {/* Modal para generar turno */}
         {showModal && (
           <Modal
             onClose={handleClose}
-            onGenerarTurno={handleGenerarTurno}
+            onGenerarTurno={() => {
+              handleClose();
+              if (modo === "op") {
+                onSubmitSuccess("mostrarTicket");
+              } else {
+                handleTipoDeCita();
+              }
+            }}
             variant="generarTurno"
           />
         )}
@@ -135,4 +142,4 @@ const PatientParticular = ({ onSubmit, modo, onSubmitSuccess }) => {
   );
 };
 
-export default PatientParticular;
+export default Form_Particular;

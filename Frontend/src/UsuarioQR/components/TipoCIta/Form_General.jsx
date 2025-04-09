@@ -5,7 +5,14 @@ import Form_Particular from "./SubForms/Form_Particular";
 import Form_Tripulante from "./SubForms/Form_Tripulante";
 import Form_Ocupacional from "./SubForms/Form_Ocupacional";
 
-export default function RegistroUsuario() {
+/**
+ * Componente principal de registro de usuario
+ * @param {Object} props - Propiedades del componente
+ * @param {string} props.modo - Modo de operación: "normal" o "op" (operador)
+ * @param {Function} props.onSubmitSuccess - Función a ejecutar cuando se completa el registro (solo en modo "op")
+ * @returns {JSX.Element} - Formulario de registro de usuario
+ */
+export default function RegistroUsuario({ modo = "normal", onSubmitSuccess = null }) {
   // Estados para manejar la opción seleccionada, datos del formulario y mensaje de confirmación
   const [selectedOption, setSelectedOption] = useState(null);
   const [formData, setFormData] = useState({});
@@ -26,20 +33,21 @@ export default function RegistroUsuario() {
 
   // Manejador para el envío del formulario
   const handleSubmit = (data) => {
-    setFormData({ type: selectedOption, ...data });
+    const completeData = { type: selectedOption, ...data };
+    setFormData(completeData);
     setShowConfirmation(true);
-    console.log("Form submitted:", { type: selectedOption, ...data });
+    console.log("Form submitted:", completeData);
   };
 
   // Función que renderiza el formulario específico según la opción seleccionada
   const renderSpecificForm = () => {
     switch (selectedOption) {
       case "paciente-particular":
-        return <Form_Particular onSubmit={handleSubmit} />;
+        return <Form_Particular onSubmit={handleSubmit} modo={modo} onSubmitSuccess={onSubmitSuccess} />;
       case "tripulante-naviera":
-        return <Form_Tripulante onSubmit={handleSubmit} />;
+        return <Form_Tripulante onSubmit={handleSubmit} modo={modo} onSubmitSuccess={onSubmitSuccess} />;
       case "paciente-ocupacional":
-        return <Form_Ocupacional onSubmit={handleSubmit} />;
+        return <Form_Ocupacional onSubmit={handleSubmit} modo={modo} onSubmitSuccess={onSubmitSuccess} />;
       default:
         return null;
     }
@@ -65,15 +73,15 @@ export default function RegistroUsuario() {
                 key={opcion.id}
                 onClick={() => handleOptionClick(opcion.id)}
                 className={`
-                    text-center w-40 h-24 flex items-center justify-center p-4
-                    rounded-lg border-2 transition-all duration-500
-                    ${
-                      selectedOption === opcion.id
-                        ? "border-blue-500 bg-blue-100 transform scale-110 shadow-lg"
-                        : "border-gray-300 bg-gray-100 hover:border-blue-300 hover:shadow-md"
-                    }
-                    cursor-pointer
-                  `}
+                  text-center w-40 h-24 flex items-center justify-center p-4
+                  rounded-lg border-2 transition-all duration-500
+                  ${
+                    selectedOption === opcion.id
+                      ? "border-blue-500 bg-blue-100 transform scale-110 shadow-lg"
+                      : "border-gray-300 bg-gray-100 hover:border-blue-300 hover:shadow-md"
+                  }
+                  cursor-pointer
+                `}
               >
                 <span className="text-gray-800 font-medium">
                   {opcion.nombre}
@@ -97,7 +105,9 @@ export default function RegistroUsuario() {
               ¡Solicitud Enviada Correctamente!
             </h3>
             <p className="text-green-600">
-              Nos pondremos en contacto con usted a la brevedad.
+              {modo === "op" 
+                ? "El registro ha sido procesado con éxito."
+                : "Nos pondremos en contacto con usted a la brevedad."}
             </p>
           </div>
         )}

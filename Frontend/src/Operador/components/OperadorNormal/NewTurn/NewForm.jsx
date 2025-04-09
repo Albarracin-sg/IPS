@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import Card from "../../../../UsuarioQR/components/Principal/Card";
 import RegisterForm from "../../../../UsuarioQR/components/Register/registro";
 import RegistroUsuario from "../../../../UsuarioQR/components/TipoCIta/Form_General";
-
-{/* componentes hijos del tipo de cita */}
+import TicketCard from "../../../../UsuarioQR/components/Tunos/ticketCard";
 
 export default function NewForm() {
     const [componente, setComponente] = useState("card");
@@ -13,6 +12,8 @@ export default function NewForm() {
             setComponente("registro");
         } else if (accion === "datosRegistro") {
             setComponente("tiposCita");
+        } else if (accion === "mostrarTicket") {
+            setComponente("ticket");
         }
     };
    
@@ -28,8 +29,13 @@ export default function NewForm() {
                     modo="op"
                     onSubmitSuccess={handleSubmitSuccess}
                 />
+            ) : componente === "tiposCita" ? (
+                <RegistroUsuario 
+                    modo="op"
+                    onSubmitSuccess={handleSubmitSuccess}
+                />
             ) : (
-                <RegistroUsuario />
+                <TicketCard />
             )}
         </div>
     );

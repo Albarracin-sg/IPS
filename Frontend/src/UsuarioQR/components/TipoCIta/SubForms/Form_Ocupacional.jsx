@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { ChevronUp, ChevronDown, CheckSquare, Square } from "lucide-react";
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
+import SubmitButton from "../SubmitButton"; // Asegúrate de ajustar la ruta
 
-const Form_Ocupacional = ({ onSubmit }) => {
+const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  
   // Estado para almacenar datos completos
   const [formData, setFormData] = useState({
     type: "paciente-ocupacional",
@@ -33,17 +35,27 @@ const Form_Ocupacional = ({ onSubmit }) => {
 
   const navigate = useNavigate();
 
-  const handleTurno = () => {
-    console.log("Redireccionando a página tipo de cita");
-    navigate("/turno");
+  // Función para manejar la acción del botón en el modal
+  const handleTipoDeCita = () => {
+    // Log form data as JSON to console
+    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
+    
+    // Cierra el modal
+    setShowModal(false);
+    
+    if (modo === "op") {
+      // En modo "op", llama a la función callback en lugar de redireccionar
+      if (onSubmitSuccess) {
+        onSubmitSuccess("datosRegistro");
+      }
+    } else {
+      // En modo normal, redirige a la página de tipo de cita
+      navigate("/TipoCita");
+    }
   };
 
   const handleClose = () => {
     setShowModal(false);
-  };
-
-  const handleGenerarTurno = () => {
-    handleTurno();
   };
 
   const handleSubmit = () => {
@@ -51,6 +63,10 @@ const Form_Ocupacional = ({ onSubmit }) => {
       onSubmit(selectedOptions);
       setShowModal(true);
     }
+  };
+
+  const handleTurno = () => {
+    console.log("Turno generado");
   };
 
   return (
@@ -88,22 +104,27 @@ const Form_Ocupacional = ({ onSubmit }) => {
             ))}
           </div>
 
-          <button
-            className="cursor-pointer mt-6 w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+          <SubmitButton
             onClick={handleSubmit}
             disabled={selectedOptions.length === 0}
-          >
-            Enviar Solicitud
-          </button>
+            text="Enviar Solicitud"
+          />
         </div>
       )}
       
+      {/* Modal de confirmación */}
       {showModal && (
         <Modal
           onClose={handleClose}
-          onGenerarTurno={handleGenerarTurno}
+          onGenerarTurno={() => {
+            handleClose();
+            if (modo === "op") {
+              onSubmitSuccess("mostrarTicket");
+            } else {
+              handleTurno();
+            }
+          }}
           variant="generarTurno"
-          userData={formData} // Pasamos los datos completos al modal
         />
       )}
     </div>
