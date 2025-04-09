@@ -19,13 +19,12 @@ export default function Card({ modo, onSubmitSuccess }) {
         setShowModal(false); // Cierra el modal si estaba abierto
         
         if (modo === "op") {
-
+            
+            if (onSubmitSuccess) {
+                onSubmitSuccess("cargarRegistro");
+            }
         } else {
             navigate("/registro");
-        }
-        
-        if (onSubmitSuccess) {
-            onSubmitSuccess();
         }
     };
    

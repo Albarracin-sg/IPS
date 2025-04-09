@@ -18,12 +18,12 @@ import { useNavigate } from "react-router-dom";
 // - Las opciones seleccionables: CheckSquare y Square se usan para mostrar visualmente si una opción está seleccionada o no.
 
 // Componente especializado para pacientes particulares que recibe una función onSubmit como prop
-const PatientParticular = ({ onSubmit }) => {
+const PatientParticular = ({ onSubmit, modo, onSubmitSuccess }) => {
   // Estados para manejar las opciones seleccionadas, expansión del formulario y visibilidad del modal
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const [showModal, setShowModal] = useState(false);
-
+  
   // Lista de especialidades médicas disponibles
   const options = [
     "Odontología",
@@ -35,26 +35,30 @@ const PatientParticular = ({ onSubmit }) => {
     "Sueroterapia",
     "Vacunación",
   ];
-
+  
   // Hook para la navegación
   const navigate = useNavigate();
-
-  // Función para manejar la redirección al turno
-  const handleTurno = () => {
-    console.log("Redireccionando a página tipo de cita");
-    navigate("/turno");
-  };
-
+  
   // Función para cerrar el modal
   const handleClose = () => {
     setShowModal(false);
   };
-
-  // Función para generar el turno y navegar
-  const handleGenerarTurno = () => {
-    handleTurno();
+  
+  // Función para manejar la redirección o ejecución según el modo
+  const handleRedirect = () => {
+    setShowModal(false); // Cierra el modal si estaba abierto
+    
+    if (modo === "op") {
+      // En modo operador, no redirigimos, sino que ejecutamos onSubmitSuccess
+      if (onSubmitSuccess) {
+        onSubmitSuccess("cargarRegistro", selectedOptions);
+      }
+    } else {
+      // En modo normal, redirigimos a la página de turno
+      navigate("/turno");
+    }
   };
-
+  
   // Función para alternar la selección de opciones
   const toggleOption = (option) => {
     if (selectedOptions.includes(option)) {

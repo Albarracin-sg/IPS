@@ -3,7 +3,7 @@ import Label from "./Label";
 import Modal from "../Principal/Modal";
 import { useNavigate } from "react-router-dom";
 
-const RegisterForm = () => {
+const RegisterForm = ({ modo, onSubmitSuccess }) => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     primerNombre: "",
@@ -17,9 +17,9 @@ const RegisterForm = () => {
     numeroDocumento: "",
     email: "",
   });
-
+  
   const navigate = useNavigate();
-
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -27,18 +27,18 @@ const RegisterForm = () => {
       [name]: value,
     });
   };
-
+  
   // Modificado: ahora solo valida el form y muestra el modal
   const handleSubmit = (e) => {
     e.preventDefault();
     // Solo mostrar el modal después de validar el formulario
     setShowModal(true);
   };
-
+  
   const handleClose = () => {
     setShowModal(false);
   };
-
+  
   // Función para manejar el registro
   const handleRegister = () => {
     // Esta función no debería usarse en esta variante
@@ -46,15 +46,24 @@ const RegisterForm = () => {
       "Función de registro llamada pero no se usa en variante consulta"
     );
   };
-
-  // envía los datos y redirecciona
+  
+  // envía los datos y redirecciona según el modo
   const handleTipoDeCita = () => {
     // Log form data as JSON to console
     console.log("Form data submitted:", JSON.stringify(formData, null, 2));
+    
     // lógica para enviar datos al servidor
-
-    console.log("Redireccionando a página tipo de cita");
-    navigate("/TipoCita");
+    
+    setShowModal(false); // Cierra el modal
+    
+    if (modo === "op") {
+      // En modo "op", llama a la función callback en lugar de redireccionar
+      if (onSubmitSuccess) {
+        onSubmitSuccess("datosRegistro"); // Cambiado de "cargarRegistro" a "datosRegistro"
+      }
+    } else {
+      navigate("/TipoCita");
+    }
   };
 
   return (
