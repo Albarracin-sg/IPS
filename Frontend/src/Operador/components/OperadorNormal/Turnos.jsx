@@ -12,7 +12,7 @@ export default function Turnos({ setComponenteActual }) {
   ];
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-200 to-blue-300 p-4">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-300 to-blue-300 p-4">
       <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-4xl w-full transition-all duration-300 hover:shadow-2xl">
         {/* Encabezado con gradiente mejorado */}
         <header className="p-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white">

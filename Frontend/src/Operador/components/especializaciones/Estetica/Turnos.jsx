@@ -11,7 +11,7 @@ export default function Turnos() {
     ];
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-200 to-blue-300 p-4">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-300 to-blue-300 p-4">
       <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-4xl w-full transition-all duration-300 hover:shadow-2xl">
         {/* Header with improved gradient */}
         <header className="p-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
@@ -79,12 +79,7 @@ export default function Turnos() {
               </svg>
               Siguiente Turno
             </button>
-            <button className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-              </svg>
-              Nuevo Turno
-            </button>
+
           </div>
         </footer>
       </div>

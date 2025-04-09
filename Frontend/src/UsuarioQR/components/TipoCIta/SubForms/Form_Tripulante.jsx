@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // Importación de íconos necesarios
 import { ChevronUp, ChevronDown, CheckSquare, Square } from "lucide-react";
 import Modal from "../../Principal/Modal";
@@ -19,6 +19,24 @@ const Form_Tripulante = ({ onSubmit }) => {
 
   // Hook para la navegación
   const navigate = useNavigate();
+
+  // Lista de servicios disponibles (condicional si es NCL)
+  const getServices = (company) => {
+    return [
+      "Medicina General",
+      "Laboratorios",
+      "Rayos X",
+      ...(company !== "NCL" ? ["Odontología"] : []),
+    ];
+  };
+
+  // Efecto para preseleccionar todos los servicios cuando cambia la empresa seleccionada
+  useEffect(() => {
+    if (selectedCompany) {
+      const services = getServices(selectedCompany);
+      setSelectedServices(services); // Seleccionar todos los servicios por defecto
+    }
+  }, [selectedCompany]);
 
   // Maneja la selección de una empresa
   const handleCompanySelect = (company) => {
@@ -42,14 +60,6 @@ const Form_Tripulante = ({ onSubmit }) => {
       setShowServiceOptions(true);
     }
   };
-
-  // Lista de servicios disponibles (condicional si es NCL)
-  const services = [
-    "Medicina General",
-    "Laboratorios",
-    "Rayos X",
-    ...(selectedCompany !== "NCL" ? ["Odontología"] : []),
-  ];
 
   // Alterna la selección de servicios
   const toggleService = (service) => {
@@ -166,7 +176,7 @@ const Form_Tripulante = ({ onSubmit }) => {
 
           <div className="mt-4 p-4 border border-blue-100 rounded-lg bg-white shadow-lg animate-fadeIn">
             <div className="grid grid-cols-2 gap-3">
-              {services.map((service) => (
+              {getServices(selectedCompany).map((service) => (
                 <div
                   key={service}
                   className="flex items-center p-2 cursor-pointer hover:bg-blue-50 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-md"
