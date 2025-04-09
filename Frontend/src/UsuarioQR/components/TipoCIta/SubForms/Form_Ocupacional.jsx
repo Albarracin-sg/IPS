@@ -121,7 +121,7 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
             if (modo === "op") {
               onSubmitSuccess("mostrarTicket");
             } else {
-              handleTurno();
+              navigate("/Turno");
             }
           }}
           variant="generarTurno"

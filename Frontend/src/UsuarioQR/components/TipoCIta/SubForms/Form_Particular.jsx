@@ -131,7 +131,7 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
               if (modo === "op") {
                 onSubmitSuccess("mostrarTicket");
               } else {
-                handleTipoDeCita();
+                navigate("/Turno");
               }
             }}
             variant="generarTurno"
