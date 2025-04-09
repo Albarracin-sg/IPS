@@ -57,19 +57,19 @@ const BarraLateral = () => {
         <div className="mx-4 my-2 border-t border-gray-700"></div>
         
         {/* Botón Nuevo Turno en la parte inferior */}
-        <div className="p-4">
+        <div className="cursor-pointer p-4">
           <button
             onClick={() => handleNavClick(<NewTurn />, "nuevo")}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded transition-colors flex items-center justify-center shadow-md"
+            className="cursor-pointer w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded transition-colors flex items-center justify-center shadow-md"
           >
-            <span className="mr-2 text-lg font-bold">+</span>
+            <span className=" cursor-pointer mr-2 text-lg font-bold">+</span>
             <span>Nuevo Turno</span>
           </button>
         </div>
       </aside>
 
       {/* Contenido principal */}
-      <main className="flex-1 bg-blue-100 overflow-auto">
+      <main className="flex-1 bg-blue-300 overflow-auto">
         {componenteActual}
       </main>
     </div>
