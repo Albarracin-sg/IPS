@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Inicio from "./Inicio";
 import Turnos from "./Turnos";
-import NewTurn from "./NewForm";
+import NewTurn from "./NewTurn/NewForm";
 
 const BarraLateral = () => {
   const [componenteActual, setComponenteActual] = useState(<Inicio />);

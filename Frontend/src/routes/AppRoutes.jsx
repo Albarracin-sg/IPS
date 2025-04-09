@@ -1,8 +1,10 @@
 import { Routes, Route } from "react-router-dom";
+/* Rutas de Usuario */
 import PrincipaPage from "../pages/PagUsuario/Principal_Pag";
 import RegisterForm from "../pages/PagUsuario/Register_Pag";
 import Ticket from "../pages/PagUsuario/Turnos_Pag";
 import TipoCita from "../pages/PagUsuario/TipoCita_Pag";
+/* Ruta del televisor */
 import Screen from "../Pages/PagScreen/Screen_Pag";
 /* Rutas de Operador-Doctor */
 import OdontologiaPage from "../pages/PagOperador/Especializaciones/Odontologia_Pag";
@@ -13,7 +15,7 @@ import RayosXPage from "../pages/PagOperador/Especializaciones/RayosX_Pag";
 import MedicinaGeneralPage from "../pages/PagOperador/Especializaciones/MedicinaGeneral_Pag";
 import VacuancionesPage from "../pages/PagOperador/Especializaciones/Vacunacion_Pag";
 import SueroterapiaPage from "../pages/PagOperador/Especializaciones/Sueroterapia_Pag";
-
+/* Rutas de Operador */
 import PagMainOp from "../pages/PagOperador/OperadorNormal/Operador";
 
 function AppRoutes() {
