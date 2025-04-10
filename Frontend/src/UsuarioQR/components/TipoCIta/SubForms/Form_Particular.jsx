@@ -34,23 +34,23 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   // Hook para la navegación
   const navigate = useNavigate();
 
-  // Actualiza el objeto formateado con estructura final de envío
+  // Crea y devuelve el objeto formateado con estructura final de envío
   // Incluye fecha y hora automáticamente sin mostrar campos en el formulario
-  const updateFormattedData = (services) => {
+  const createFormattedData = (services) => {
     // Obtener fecha actual en formato YYYY-MM-DD
     const fechaActual = new Date().toISOString().split('T')[0];
     
     // Obtener hora actual en formato HH:MM
     const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
     
-    setFormattedData({
+    return {
       citas: {
         tipoCita: "particular",
         citas: services,
         fecha: fechaActual,  // Agregar fecha actual al JSON
         hora: horaActual     // Agregar hora actual al JSON
       }
-    });
+    };
   };
   
   // Función para cerrar el modal
@@ -60,8 +60,6 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   
   // Acción del botón "Generar Turno" en el modal
   const handleGenerarTurno = () => {
-    // Solo mandamos el JSON por consola
-    console.log(JSON.stringify(formattedData, null, 2));
     setShowModal(false);
     if (modo === "op") {
       onSubmitSuccess("mostrarTicket");
@@ -87,36 +85,26 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
       ...formData,
       selectedOptions: updatedOptions
     });
-    // Actualizar el formato JSON estructurado
-    updateFormattedData(updatedOptions);
   };
   
   // Función para manejar el envío del formulario
   const handleSubmit = () => {
     if (selectedOptions.length > 0) {
-      // Obtener fecha y hora actual para incluir en el envío
-      const fechaActual = new Date().toISOString().split('T')[0];
-      const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
+      // Crear los datos formateados
+      const dataToSend = createFormattedData(selectedOptions);
       
-      // Si hay callback onSubmit, pasar los datos seleccionados
+      // Enviar datos inmediatamente aquí
+      console.log("Enviando datos:", JSON.stringify(dataToSend, null, 2));
+      
+      // Si hay callback onSubmit, pasar los datos formateados
       if (onSubmit) {
-        onSubmit({
-          services: selectedOptions,
-          fecha: fechaActual,  // Incluir fecha en callback
-          hora: horaActual     // Incluir hora en callback
-        });
+        onSubmit(dataToSend);
       }
       
-      // Preparar datos formateados para mostrar en el modal
-      const dataToLog = {
-        citas: {
-          tipoCita: "particular",
-          citas: selectedOptions,
-          fecha: fechaActual,  // Incluir fecha en el modal
-          hora: horaActual     // Incluir hora en el modal
-        }
-      };
-      setFormattedData(dataToLog);
+      // Guardar los datos formateados para mostrar en el modal
+      setFormattedData(dataToSend);
+      
+      // Mostrar el modal de confirmación
       setShowModal(true);
     }
   };

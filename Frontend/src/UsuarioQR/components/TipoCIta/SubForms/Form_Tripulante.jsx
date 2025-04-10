@@ -3,8 +3,12 @@ import { ChevronUp, ChevronDown, CheckSquare, Square } from "lucide-react";
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
 import SubmitButton from "../SubmitButton";
+import { useFormData } from "../../../context"; // Importar el hook personalizado
 
 const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
+  // Obtener datos y funciones del contexto
+  const { registroData, setCitaData, enviarDatosCompletos } = useFormData();
+
   // Empresa seleccionada por el usuario
   const [selectedCompany, setSelectedCompany] = useState("");
 
@@ -36,6 +40,13 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
   // Hook para redireccionar páginas
   const navigate = useNavigate();
 
+  // Comprobar si los datos de registro están disponibles
+  useEffect(() => {
+    if (!registroData && modo === "op") {
+      console.warn("No hay datos de registro disponibles en el contexto");
+    }
+  }, [registroData, modo]);
+
   // Retorna los servicios disponibles según la empresa seleccionada
   const getServices = (company) => {
     return [
@@ -62,6 +73,7 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
 
   // Actualiza el objeto formateado con estructura final de envío
   // Incluye fecha y hora automáticamente sin mostrar campos en el formulario
+  // Actualiza el objeto formateado con estructura final de envío
   const updateFormattedData = (company, services) => {
     // Obtener fecha actual en formato YYYY-MM-DD
     const fechaActual = new Date().toISOString().split('T')[0];
@@ -74,11 +86,11 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
         tipoCita: "tripulante",
         nombreNaviera: company,
         citas: services,
-        fecha: fechaActual,  // Agregar fecha actual al JSON
-        hora: horaActual     // Agregar hora actual al JSON
+        fecha: fechaActual,
+        hora: horaActual
       }
     });
-  };
+    };
 
   // Al seleccionar una empresa, se oculta su lista y se muestra servicios
   const handleCompanySelect = (company) => {
@@ -106,16 +118,56 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
   };
 
   // Acción del botón "Generar Turno" en el modal
-  const handleGenerarTurno = () => {
-    // Mostramos por consola los datos que se enviarán
-    console.log(JSON.stringify(formattedData, null, 2));
-    setShowModal(false);
-    if (modo === "op") {
-      onSubmitSuccess("mostrarTicket");
-    } else {
-      navigate("/Turno");
-    }
+  // Modifica la función handleGenerarTurno en Form_Tripulante.jsx
+  // Modifica la función handleGenerarTurno en Form_Tripulante.jsx
+const handleGenerarTurno = () => {
+  // Extrae los datos de registro y de cita
+  const registroInfo = registroData || {};
+  const citaInfo = formattedData?.citas || {};
+  
+  // Crea un objeto plano combinando todos los datos
+  const datosCompletos = {
+    // Datos personales del formulario
+    primerNombre: registroInfo.primerNombre,
+    segundoNombre: registroInfo.segundoNombre,
+    primerApellido: registroInfo.primerApellido,
+    segundoApellido: registroInfo.segundoApellido,
+    fechaNacimiento: registroInfo.fechaNacimiento,
+    localidad: registroInfo.localidad,
+    numeroTelefono: registroInfo.numeroTelefono,
+    tipoDocumento: registroInfo.tipoDocumento,
+    numeroDocumento: registroInfo.numeroDocumento,
+    email: registroInfo.email,
+    
+    // Datos de la cita
+    citas: {
+      tipoCita: citaInfo.tipoCita || "tripulante",
+      nombreNaviera: citaInfo.nombreNaviera || selectedCompany,
+      citas: citaInfo.citas || selectedServices
+    },
+    fecha: citaInfo.fecha || new Date().toISOString().split('T')[0],
+    hora: citaInfo.hora || new Date().toTimeString().split(' ')[0].slice(0, 5)
   };
+  
+  // Log de verificación con el nuevo formato
+  console.log("Datos completos enviados:", JSON.stringify(datosCompletos, null, 2));
+  
+  // Actualiza el estado si es necesario (opcional)
+  setCitaData({
+    tipoCita: "tripulante",
+    nombreNaviera: selectedCompany,
+    citas: selectedServices
+  });
+  
+  setShowModal(false);
+  if (modo === "op") {
+    // Pasar los datos completos con el nuevo formato al callback
+    onSubmitSuccess("mostrarTicket", datosCompletos);
+  } else {
+    navigate("/Turno");
+  }
+};
+  
 
   // Cierre del modal manualmente
   const handleClose = () => {
@@ -130,22 +182,39 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
       const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
       
       // Preparar datos formateados para mostrar en el modal
-      const dataToLog = {
-        citas: {
-          tipoCita: "tripulante",
-          nombreNaviera: selectedCompany,
-          citas: selectedServices,
-          fecha: fechaActual,  // Incluir fecha en el modal
-          hora: horaActual     // Incluir hora en el modal
-        }
+      const dataToLog = {        
+        tipoCita: "tripulante",
+        nombreNaviera: selectedCompany,
+        citas: selectedServices,
+        fecha: fechaActual,  // Incluir fecha en el modal
+        hora: horaActual     // Incluir hora en el modal
+        
       };
       setFormattedData(dataToLog);
       setShowModal(true);
     }
   };
-
+  // En Form_Tripulante.jsx, añade una verificación al inicio para asegurar que hay datos
+useEffect(() => {
+  if (!registroData) {
+    console.log("Datos de registro encontrados:", registroData);
+  }
+}, [registroData, navigate, modo]);
   return (
     <div className="w-full transition-all duration-500 ease-in-out">
+      {/* Mostrar resumen de datos de registro si están disponibles */}
+      {registroData && (
+        <div className="mb-6 p-4 bg-blue-50 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold text-blue-700 mb-2">Datos de Registro</h3>
+          <p className="text-gray-700">
+            <strong>Nombre:</strong> {registroData.primerNombre} {registroData.segundoNombre} {registroData.primerApellido} {registroData.segundoApellido}
+          </p>
+          <p className="text-gray-700">
+            <strong>Documento:</strong> {registroData.tipoDocumento} {registroData.numeroDocumento}
+          </p>
+        </div>
+      )}
+      
       {/* Sección de selección de empresa */}
       <div
         className="flex items-center justify-between bg-blue-50 p-4 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"
