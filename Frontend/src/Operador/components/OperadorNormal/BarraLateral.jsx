@@ -5,7 +5,7 @@ import NewTurn from "./NewTurn/NewForm";
 
 const BarraLateral = () => {
   const [componenteActual, setComponenteActual] = useState(<Inicio />);
-  const [activeItem, setActiveItem] = useState("inicio");
+  const [activeItem, setActiveItem] = useState("inicio"); 
   
   const handleNavClick = (component, itemName) => {
     setComponenteActual(component);

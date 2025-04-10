@@ -2,13 +2,13 @@ import React from "react";
 
 export default function Turnos() {
   // Sample data for display purposes
-  const samplePatients = [
-    { PrimerNombre: "Juan", PrimerApellido: "Pérez", Turno: "T001", module: "A" },
-    { PrimerNombre: "María", PrimerApellido: "López", Turno: "T002", module: "B" },
-    { PrimerNombre: "Carlos", PrimerApellido: "Gómez", Turno: "T003", module: "A" },
-    { PrimerNombre: "Ana", PrimerApellido: "Martínez", Turno: "T004", module: "C" },
-    { PrimerNombre: "Luis", PrimerApellido: "Rodríguez", Turno: "T005", module: "B" }
-  ];
+    const samplePatients = [
+        { PrimerNombre: "Juan", PrimerApellido: "Pérez", Turno: "T001", module: "A" },
+        { PrimerNombre: "María", PrimerApellido: "López", Turno: "T002", module: "B" },
+        { PrimerNombre: "Carlos", PrimerApellido: "Gómez", Turno: "T003", module: "A" },
+        { PrimerNombre: "Ana", PrimerApellido: "Martínez", Turno: "T004", module: "C" },
+        { PrimerNombre: "Luis", PrimerApellido: "Rodríguez", Turno: "T005", module: "B" }
+    ];
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-300 to-blue-300 p-4">
