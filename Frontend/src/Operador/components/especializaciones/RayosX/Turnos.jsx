@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useTurno } from "../../../services/TurnoProvider";
 
 export default function SistemaTurnos() {
-  // Sample data for display purposes
+  const { currentTurn, setCurrentTurn, nextTurnEnabled, setNextTurnEnabled } = useTurno();
+  
   const [patients, setPatients] = useState([
     { nombre: "Juan Pérez", turno: "T001", modulo: "A" },
     { nombre: "María López", turno: "T002", modulo: "B" },
@@ -10,31 +12,16 @@ export default function SistemaTurnos() {
     { nombre: "Luis Rodríguez", turno: "T005", modulo: "B" }
   ]);
 
-  // State for current turn
-  const [currentTurn, setCurrentTurn] = useState({
-    nombre: "Javier Gomez",
-    turno: "T001",
-    modulo: "A"
-  });
-
-  // Estado para controlar si el botón "Siguiente Turno" está habilitado
-  const [nextTurnEnabled, setNextTurnEnabled] = useState(true);
-
-  // Function to move to next turn (botón verde "Siguiente Turno")
   const nextTurn = () => {
     if (patients.length > 0 && nextTurnEnabled) {
-      // Actualizar turno actual con el primer paciente de la lista
       setCurrentTurn(patients[0]);
-      // Eliminar el primer paciente de la lista
       setPatients(patients.slice(1));
-      // Deshabilitar el botón "Siguiente Turno"
       setNextTurnEnabled(false);
     }
   };
 
-  // Function when pressing the blue "Siguiente" button in current turn
   const enableNextTurnButton = () => {
-    // Habilitar el botón "Siguiente Turno"
+    setCurrentTurn(null);
     setNextTurnEnabled(true);
   };
 
@@ -48,22 +35,30 @@ export default function SistemaTurnos() {
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center gap-12">
             <span className="text-md font-medium text-gray-500">1</span>
-            <span className="text-md font-semibold text-gray-800">{currentTurn.nombre}</span>
+            <span className="text-md font-semibold text-gray-800">
+              {currentTurn ? currentTurn.nombre : "No hay paciente"}
+            </span>
           </div>
           <div className="flex items-center text-sm gap-10">
             <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-md font-medium">
-              {currentTurn.turno}
+              {currentTurn ? currentTurn.turno : "---"}
             </span>
-            <span className={`px-4 py-2 rounded-full text-sm font-medium 
-              ${currentTurn.modulo === 'A' ? 'bg-green-100 text-green-800' : 
-                currentTurn.modulo === 'B' ? 'bg-purple-100 text-purple-800' : 
-                'bg-orange-100 text-orange-800'}`}>
-              Módulo {currentTurn.modulo}
+            <span className={`px-4 py-2 rounded-full text-sm font-medium ${
+              currentTurn
+                ? currentTurn.modulo === 'A'
+                  ? 'bg-green-100 text-green-800'
+                  : currentTurn.modulo === 'B'
+                  ? 'bg-purple-100 text-purple-800'
+                  : 'bg-orange-100 text-orange-800'
+                : 'bg-gray-100 text-gray-800'
+            }`}>
+              Módulo {currentTurn ? currentTurn.modulo : "---"}
             </span>
           </div>
           <button 
-            onClick={enableNextTurnButton} 
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-md font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+            onClick={enableNextTurnButton}
+            disabled={!currentTurn}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-md font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Atendido
           </button>

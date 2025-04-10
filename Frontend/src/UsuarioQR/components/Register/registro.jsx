@@ -69,7 +69,7 @@ const RegisterForm = ({ modo, onSubmitSuccess }) => {
   return (
     <>
       {/* Contenedor principal con fondo degradado y sombra */}
-      <div className="bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-3xl p-6 w-full max-w-6xl mx-auto border border-gray-100 mt-16">
+      <div className="bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-3xl p-6 w-full max-w-6xl mx-auto border border-gray-100 ">
         {/* Encabezado con diseño curvo y línea decorativa */}
         <div className="mb-6 text-center">
           <div className="relative">
