@@ -4,7 +4,7 @@ import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
 import SubmitButton from "../SubmitButton";
 
-const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
+const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   // Empresa seleccionada por el usuario
   const [selectedCompany, setSelectedCompany] = useState("");
 
@@ -56,20 +56,19 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
         company: selectedCompany,
         selectedOptions: services
       });
-      updateFormattedData(selectedCompany, services);
     }
   }, [selectedCompany]);
 
-  // Actualiza el objeto formateado con estructura final de envío
+  // Crea y devuelve el objeto formateado con estructura final de envío
   // Incluye fecha y hora automáticamente sin mostrar campos en el formulario
-  const updateFormattedData = (company, services) => {
+  const createFormattedData = (company, services) => {
     // Obtener fecha actual en formato YYYY-MM-DD
     const fechaActual = new Date().toISOString().split('T')[0];
     
     // Obtener hora actual en formato HH:MM
     const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
     
-    setFormattedData({
+    return {
       citas: {
         tipoCita: "tripulante",
         nombreNaviera: company,
@@ -77,7 +76,7 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
         fecha: fechaActual,  // Agregar fecha actual al JSON
         hora: horaActual     // Agregar hora actual al JSON
       }
-    });
+    };
   };
 
   // Al seleccionar una empresa, se oculta su lista y se muestra servicios
@@ -102,13 +101,10 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
       ...formData,
       selectedOptions: updatedServices
     });
-    updateFormattedData(selectedCompany, updatedServices);
   };
 
   // Acción del botón "Generar Turno" en el modal
   const handleGenerarTurno = () => {
-    // Mostramos por consola los datos que se enviarán
-    console.log(JSON.stringify(formattedData, null, 2));
     setShowModal(false);
     if (modo === "op") {
       onSubmitSuccess("mostrarTicket");
@@ -125,21 +121,21 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
   // Acción al hacer clic en "Enviar Solicitud"
   const handleSubmit = () => {
     if (selectedServices.length > 0) {
-      // Obtener fecha y hora actual para incluir en el envío
-      const fechaActual = new Date().toISOString().split('T')[0];
-      const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
+      // Crear los datos formateados
+      const dataToSend = createFormattedData(selectedCompany, selectedServices);
       
-      // Preparar datos formateados para mostrar en el modal
-      const dataToLog = {
-        citas: {
-          tipoCita: "tripulante",
-          nombreNaviera: selectedCompany,
-          citas: selectedServices,
-          fecha: fechaActual,  // Incluir fecha en el modal
-          hora: horaActual     // Incluir hora en el modal
-        }
-      };
-      setFormattedData(dataToLog);
+      // Enviar datos inmediatamente aquí
+      console.log("Enviando datos:", JSON.stringify(dataToSend, null, 2));
+      
+      // Si hay callback onSubmit, pasar los datos formateados
+      if (onSubmit) {
+        onSubmit(dataToSend);
+      }
+      
+      // Guardar los datos formateados para mostrar en el modal
+      setFormattedData(dataToSend);
+      
+      // Mostrar el modal de confirmación
       setShowModal(true);
     }
   };
