@@ -10,11 +10,14 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [showModal, setShowModal] = useState(false);
   
-  // Datos completos del formulario
-  const formData = {
+  // Estado para almacenar datos del formulario
+  const [formData, setFormData] = useState({
     type: "paciente-particular",
-    selectedOptions: selectedOptions
-  };
+    selectedOptions: []
+  });
+
+  // Estado para almacenar los datos formateados con estructura final
+  const [formattedData, setFormattedData] = useState(null);
   
   // Lista de especialidades médicas disponibles
   const options = [
@@ -30,44 +33,90 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   
   // Hook para la navegación
   const navigate = useNavigate();
+
+  // Actualiza el objeto formateado con estructura final de envío
+  // Incluye fecha y hora automáticamente sin mostrar campos en el formulario
+  const updateFormattedData = (services) => {
+    // Obtener fecha actual en formato YYYY-MM-DD
+    const fechaActual = new Date().toISOString().split('T')[0];
+    
+    // Obtener hora actual en formato HH:MM
+    const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
+    
+    setFormattedData({
+      citas: {
+        tipoCita: "particular",
+        citas: services,
+        fecha: fechaActual,  // Agregar fecha actual al JSON
+        hora: horaActual     // Agregar hora actual al JSON
+      }
+    });
+  };
   
   // Función para cerrar el modal
   const handleClose = () => {
     setShowModal(false);
   };
   
-  // Función para manejar la acción del botón "Generar Turno" en el modal
-  const handleTipoDeCita = () => {
-    // Log form data as JSON to console
-    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
-    
-    // Cierra el modal
+  // Acción del botón "Generar Turno" en el modal
+  const handleGenerarTurno = () => {
+    // Solo mandamos el JSON por consola
+    console.log(JSON.stringify(formattedData, null, 2));
     setShowModal(false);
-    
     if (modo === "op") {
-      // En modo "op", llama a la función callback en lugar de redireccionar
-      if (onSubmitSuccess) {
-        onSubmitSuccess("datosRegistro");
-      }
+      onSubmitSuccess("mostrarTicket");
     } else {
-      // En modo normal, redirige a la página de tipo de cita
-      navigate("/TipoCita");
+      navigate("/Turno");
     }
   };
   
   // Función para alternar la selección de opciones
   const toggleOption = (option) => {
+    let updatedOptions;
     if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter((item) => item !== option));
+      // Si ya está seleccionado, lo quitamos de la lista
+      updatedOptions = selectedOptions.filter((item) => item !== option);
     } else {
-      setSelectedOptions([...selectedOptions, option]);
+      // Si no está seleccionado, lo añadimos a la lista
+      updatedOptions = [...selectedOptions, option];
     }
+    
+    setSelectedOptions(updatedOptions);
+    // Actualizar formData cuando cambian las opciones seleccionadas
+    setFormData({
+      ...formData,
+      selectedOptions: updatedOptions
+    });
+    // Actualizar el formato JSON estructurado
+    updateFormattedData(updatedOptions);
   };
   
   // Función para manejar el envío del formulario
   const handleSubmit = () => {
     if (selectedOptions.length > 0) {
-      onSubmit(selectedOptions);
+      // Obtener fecha y hora actual para incluir en el envío
+      const fechaActual = new Date().toISOString().split('T')[0];
+      const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
+      
+      // Si hay callback onSubmit, pasar los datos seleccionados
+      if (onSubmit) {
+        onSubmit({
+          services: selectedOptions,
+          fecha: fechaActual,  // Incluir fecha en callback
+          hora: horaActual     // Incluir hora en callback
+        });
+      }
+      
+      // Preparar datos formateados para mostrar en el modal
+      const dataToLog = {
+        citas: {
+          tipoCita: "particular",
+          citas: selectedOptions,
+          fecha: fechaActual,  // Incluir fecha en el modal
+          hora: horaActual     // Incluir hora en el modal
+        }
+      };
+      setFormattedData(dataToLog);
       setShowModal(true);
     }
   };
@@ -122,19 +171,14 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
           </div>
         )}
         
-        {/* Modal para generar turno */}
+        {/* Modal de confirmación con datos formateados */}
         {showModal && (
           <Modal
             onClose={handleClose}
-            onGenerarTurno={() => {
-              handleClose();
-              if (modo === "op") {
-                onSubmitSuccess("mostrarTicket");
-              } else {
-                navigate("/Turno");
-              }
-            }}
+            onGenerarTurno={handleGenerarTurno}
             variant="generarTurno"
+            userData={formData}
+            formattedData={formattedData}
           />
         )}
       </div>

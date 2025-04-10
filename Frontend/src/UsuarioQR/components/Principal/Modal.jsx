@@ -1,49 +1,38 @@
 import React, { useEffect, useState } from "react";
 import Button from "./button";
 
-export default function Modal({ 
-  onClose, 
-  onRegister, 
-  onConsultar, 
-  onGenerarTurno, 
+export default function Modal({
+  onClose,
+  onRegister,
+  onConsultar,
+  onGenerarTurno,
   variant = "registro",
-  userData = {} // Agregamos una prop para recibir los datos seleccionados
+  
 }) {
   const [isVisible, setIsVisible] = useState(false);
-    
+   
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 10);
     return () => clearTimeout(timer);
   }, []);
-
+  
   const handleModalClick = (e) => e.stopPropagation();
-    
+   
   const handleClose = (e) => {
     setIsVisible(false);
     setTimeout(() => onClose(e), 100);
   };
-
-  // Función para manejar la generación del turno y mostrar datos en consola
+  
+  // Función actualizada para manejar la generación del turno
   const handleGenerarTurno = () => {
-    // Mostrar en consola los datos del tipo de cita y citas seleccionadas
-    console.log("Form data submitted: {");
-    console.log(`  "tipoCita": "${userData.type || ''}",`);
-    console.log(`  "citas": ${JSON.stringify(userData.selectedOptions || [])},`);
-    
-    // Si hay otros datos de usuario disponibles, también mostrarlos
-    if (userData.personalInfo) {
-      Object.entries(userData.personalInfo).forEach(([key, value]) => {
-        console.log(`  "${key}": "${value}",`);
-      });
-    }
-    console.log("}");
+    // Ya no hacemos log aquí, lo hacemos en el componente Form_Tripulante
     
     // Llamar a la función original para generar el turno
     if (onGenerarTurno) {
       onGenerarTurno();
     }
   };
-
+  
   // Función para obtener el título apropiado según la variante
   const getTitle = () => {
     if (variant === "registro") {
@@ -55,7 +44,7 @@ export default function Modal({
     }
     return "Usuario no registrado"; // Título por defecto
   };
-    
+   
   // Función para obtener la descripción apropiada según la variante
   const getDescription = () => {
     if (variant === "registro") {
@@ -67,7 +56,7 @@ export default function Modal({
     }
     return ""; // Descripción por defecto vacía
   };
-    
+   
   const renderButtons = () => {
     if (variant === "registro") {
       return (
@@ -93,7 +82,7 @@ export default function Modal({
     }
     return null;
   };
-
+  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div

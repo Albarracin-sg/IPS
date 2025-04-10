@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 // Importación de los sub-formularios específicos
 import Form_Particular from "./SubForms/Form_Particular";
 import Form_Tripulante from "./SubForms/Form_Tripulante";
@@ -17,28 +16,24 @@ export default function RegistroUsuario({ modo = "normal", onSubmitSuccess = nul
   const [selectedOption, setSelectedOption] = useState(null);
   const [formData, setFormData] = useState({});
   const [showConfirmation, setShowConfirmation] = useState(false);
-
   // Array de opciones disponibles para el registro
   const opciones = [
     { id: "paciente-particular", nombre: "Paciente Particular" },
     { id: "tripulante-naviera", nombre: "Tripulante - Naviera" },
     { id: "paciente-ocupacional", nombre: "Paciente Ocupacional" },
   ];
-
   // Manejador para cuando se selecciona una opción
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setShowConfirmation(false);
   };
-
   // Manejador para el envío del formulario
   const handleSubmit = (data) => {
     const completeData = { type: selectedOption, ...data };
     setFormData(completeData);
     setShowConfirmation(true);
-    console.log("Form submitted:", completeData);
+    // Eliminado el console.log
   };
-
   // Función que renderiza el formulario específico según la opción seleccionada
   const renderSpecificForm = () => {
     switch (selectedOption) {
@@ -52,7 +47,6 @@ export default function RegistroUsuario({ modo = "normal", onSubmitSuccess = nul
         return null;
     }
   };
-
   return (
     // Contenedor principal con diseño centrado
     <div className="flex flex-col items-center w-full max-w-5xl p-6 rounded-lg bg-white shadow-xl">
@@ -90,14 +84,12 @@ export default function RegistroUsuario({ modo = "normal", onSubmitSuccess = nul
             ))}
           </div>
         </div>
-
         {/* Sección del formulario dinámico */}
         {selectedOption && (
           <div className="w-full transition-all duration-500 ease-in-out animate-bounceIn">
             {renderSpecificForm()}
           </div>
         )}
-
         {/* Mensaje de confirmación */}
         {showConfirmation && (
           <div className="mt-6 p-4 bg-green-50 border border-green-100 rounded-lg w-full text-center animate-pulse shadow-lg">
@@ -105,7 +97,7 @@ export default function RegistroUsuario({ modo = "normal", onSubmitSuccess = nul
               ¡Solicitud Enviada Correctamente!
             </h3>
             <p className="text-green-600">
-              {modo === "op" 
+              {modo === "op"
                 ? "El registro ha sido procesado con éxito."
                 : "Nos pondremos en contacto con usted a la brevedad."}
             </p>

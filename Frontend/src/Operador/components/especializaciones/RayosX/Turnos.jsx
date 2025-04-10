@@ -1,33 +1,81 @@
-import React, { useState } from "react";
-import { useTurno } from "../../../services/TurnoProvider";
+import React, { useState, useEffect } from "react";
 
 export default function SistemaTurnos() {
-  const { currentTurn, setCurrentTurn, nextTurnEnabled, setNextTurnEnabled } = useTurno();
-  
-  const [patients, setPatients] = useState([
+  // Datos de muestra para propósitos de visualización
+  const [allPatients, setAllPatients] = useState([
     { nombre: "Juan Pérez", turno: "T001", modulo: "A" },
     { nombre: "María López", turno: "T002", modulo: "B" },
     { nombre: "Carlos Gómez", turno: "T003", modulo: "A" },
     { nombre: "Ana Martínez", turno: "T004", modulo: "C" },
-    { nombre: "Luis Rodríguez", turno: "T005", modulo: "B" }
+    { nombre: "Luis Rodríguez", turno: "T005", modulo: "B" },
+    { nombre: "Sofia Torres", turno: "T006", modulo: "A" },
+    { nombre: "Ricardo Gómez", turno: "T007", modulo: "C" },
+    { nombre: "Elena Fuentes", turno: "T008", modulo: "A" },
+    { nombre: "Miguel Sánchez", turno: "T009", modulo: "B" },
+    { nombre: "Laura Díaz", turno: "T010", modulo: "C" },
+    { nombre: "Jorge Vega", turno: "T011", modulo: "A" },
+    { nombre: "Carmen Ruiz", turno: "T012", modulo: "B" },
   ]);
 
-  const nextTurn = () => {
-    if (patients.length > 0 && nextTurnEnabled) {
-      setCurrentTurn(patients[0]);
-      setPatients(patients.slice(1));
+  // Estado para la paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const pacientesPorPagina = 5; // Mostramos 5 pacientes por página
+  const [pacientesMostrados, setPacientesMostrados] = useState([]);
+  const totalPaginas = Math.ceil(allPatients.length / pacientesPorPagina);
+
+  // Estado para el turno actual
+  const [currentTurn, setCurrentTurn] = useState({
+    nombre: "Javier Gomez",
+    turno: "T001",
+    modulo: "A"
+  });
+
+  // Estado para controlar si el botón "Siguiente Turno" está habilitado
+  const [nextTurnEnabled, setNextTurnEnabled] = useState(true);
+
+  // Actualizar los pacientes mostrados cuando cambia la página o la lista completa
+  useEffect(() => {
+    const indiceInicial = (currentPage - 1) * pacientesPorPagina;
+    const indiceFinal = indiceInicial + pacientesPorPagina;
+    setPacientesMostrados(allPatients.slice(indiceInicial, indiceFinal));
+  }, [currentPage, allPatients]);
+
+  // Función para pasar al siguiente turno (botón verde "Siguiente Turno")
+  const siguienteTurno = () => {
+    if (allPatients.length > 0 && nextTurnEnabled) {
+      // Actualizar turno actual con el primer paciente de la lista
+      setCurrentTurn(allPatients[0]);
+      // Eliminar el primer paciente de la lista
+      setAllPatients(allPatients.slice(1));
+      // Deshabilitar el botón "Siguiente Turno"
       setNextTurnEnabled(false);
+      // Volver a la primera página cuando se toma el siguiente turno
+      setCurrentPage(1);
     }
   };
 
-  const enableNextTurnButton = () => {
-    setCurrentTurn(null);
+  // Función para cuando se presiona el botón azul "Atendido" en el turno actual
+  const habilitarBotonSiguienteTurno = () => {
+    // Habilitar el botón "Siguiente Turno"
     setNextTurnEnabled(true);
+  };
+
+  // Funciones de paginación
+  const irSiguientePagina = () => {
+    if (currentPage < totalPaginas) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const irPaginaAnterior = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-blue-300 p-6 gap-6">
-      {/* Current Turn Card */}
+      {/* Tarjeta de Turno Actual */}
       <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-4xl w-full">
         <div className="bg-blue-600 text-white p-5">
           <h3 className="text-xl font-bold tracking-tight">TURNO ACTUAL</h3>
@@ -56,24 +104,22 @@ export default function SistemaTurnos() {
             </span>
           </div>
           <button 
-            onClick={enableNextTurnButton}
-            disabled={!currentTurn}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-md font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+            onClick={habilitarBotonSiguienteTurno} 
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-md font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"          >
             Atendido
           </button>
         </div>
       </div>
 
-      {/* Waiting List Card */}
+      {/* Tarjeta de Lista de Espera */}
       <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-4xl w-full">
-        {/* Header */}
+        {/* Encabezado */}
         <div className="p-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
           <h2 className="text-xl font-bold tracking-tight">Gestión de Turnos Rayos X</h2>
           <p className="text-md opacity-90 mt-1">Sistema de administración de cola de espera</p>
         </div>
         
-        {/* Table */}
+        {/* Tabla */}
         <div className="w-full overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -85,12 +131,14 @@ export default function SistemaTurnos() {
               </tr>
             </thead>
             <tbody>
-              {patients.map((patient, index) => (
+              {pacientesMostrados.map((patient, index) => (
                 <tr 
                   key={index} 
                   className="border-b border-gray-100 hover:bg-blue-50 transition-colors duration-150"
                 >
-                  <td className="px-6 py-4 text-md text-gray-500">{index + 1}</td>
+                  <td className="px-6 py-4 text-md text-gray-500">
+                    {(currentPage - 1) * pacientesPorPagina + index + 1}
+                  </td>
                   <td className="px-6 py-4 font-medium text-md text-gray-800">{patient.nombre}</td>
                   <td className="px-6 py-4">
                     <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
@@ -111,19 +159,40 @@ export default function SistemaTurnos() {
           </table>
         </div>
         
-        {/* Footer */}
+        {/* Pie de página con botones de navegación */}
         <div className="p-5 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
-          <div className="flex gap-3">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded-lg text-md font-medium transition-all duration-200 shadow-md hover:shadow-lg">
+          <div className="flex gap-3 items-center">
+            <button 
+              onClick={irPaginaAnterior} 
+              disabled={currentPage === 1}
+              className={`px-5 py-3 rounded-lg text-md font-medium transition-all duration-200 shadow-md ${
+                currentPage === 1 
+                ? "bg-gray-400 text-white cursor-not-allowed opacity-70" 
+                : "bg-blue-500 hover:bg-blue-600 text-white hover:shadow-lg"
+              }`}
+            >
               Anterior
             </button>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded-lg text-md font-medium transition-all duration-200 shadow-md hover:shadow-lg">
+            
+            <span className="text-gray-700 font-medium mx-2">
+              Página {currentPage} de {totalPaginas}
+            </span>
+            
+            <button 
+              onClick={irSiguientePagina}
+              disabled={currentPage === totalPaginas}
+              className={`px-5 py-3 rounded-lg text-md font-medium transition-all duration-200 shadow-md ${
+                currentPage === totalPaginas 
+                ? "bg-gray-400 text-white cursor-not-allowed opacity-70" 
+                : "bg-blue-500 hover:bg-blue-600 text-white hover:shadow-lg"
+              }`}
+            >
               Siguiente
             </button>
           </div>
           
           <button 
-            onClick={nextTurn} 
+            onClick={siguienteTurno} 
             disabled={!nextTurnEnabled}
             className={`text-white px-6 py-3 rounded-lg text-md font-medium transition-all duration-200 flex items-center
               ${nextTurnEnabled 
