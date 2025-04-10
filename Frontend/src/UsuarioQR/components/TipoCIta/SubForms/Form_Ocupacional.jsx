@@ -9,14 +9,31 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [showModal, setShowModal] = useState(false);
   
-  // Estado para almacenar datos completos
+  // Estado para almacenar datos del formulario
   const [formData, setFormData] = useState({
     type: "paciente-ocupacional",
     selectedOptions: []
   });
 
+  // Estado para almacenar los datos formateados con estructura final
+  const [formattedData, setFormattedData] = useState(null);
+
   const options = ["Laboratorio", "Medicina General"];
 
+  // Hook para redireccionar páginas
+  const navigate = useNavigate();
+
+  // Actualiza el objeto formateado con estructura final de envío
+  const updateFormattedData = (services) => {
+    setFormattedData({
+      citas: {
+        tipoCita: "ocupacional",
+        citas: services,
+      }
+    });
+  };
+
+  // Al hacer clic en un servicio, lo añade o lo elimina del estado
   const toggleOption = (option) => {
     let updatedOptions;
     if (selectedOptions.includes(option)) {
@@ -31,42 +48,44 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
       ...formData,
       selectedOptions: updatedOptions
     });
+    // Actualizar el formato JSON estructurado
+    updateFormattedData(updatedOptions);
   };
 
-  const navigate = useNavigate();
-
-  // Función para manejar la acción del botón en el modal
-  const handleTipoDeCita = () => {
-    // Log form data as JSON to console
-    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
-    
-    // Cierra el modal
+  // Acción del botón "Generar Turno" en el modal
+  const handleGenerarTurno = () => {
+    console.log("Datos de cita:",JSON.stringify(formattedData, null, 2));
     setShowModal(false);
-    
     if (modo === "op") {
-      // En modo "op", llama a la función callback en lugar de redireccionar
-      if (onSubmitSuccess) {
-        onSubmitSuccess("datosRegistro");
-      }
+      onSubmitSuccess("mostrarTicket");
     } else {
-      // En modo normal, redirige a la página de tipo de cita
-      navigate("/TipoCita");
+      navigate("/Turno");
     }
   };
 
+  // Cierre del modal manualmente
   const handleClose = () => {
     setShowModal(false);
   };
 
+  // Acción al hacer clic en "Enviar Solicitud"
   const handleSubmit = () => {
     if (selectedOptions.length > 0) {
-      onSubmit(selectedOptions);
+      // Si hay callback onSubmit, pasar los datos seleccionados
+      if (onSubmit) {
+        onSubmit(selectedOptions);
+      }
+      
+      // Preparar datos formateados para mostrar en el modal
+      const dataToLog = {
+        citas: {
+          tipoCita: "ocupacional",
+          citas: selectedOptions,
+        }
+      };
+      setFormattedData(dataToLog);
       setShowModal(true);
     }
-  };
-
-  const handleTurno = () => {
-    console.log("Turno generado");
   };
 
   return (
@@ -112,19 +131,14 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
         </div>
       )}
       
-      {/* Modal de confirmación */}
+      {/* Modal de confirmación con datos formateados */}
       {showModal && (
         <Modal
           onClose={handleClose}
-          onGenerarTurno={() => {
-            handleClose();
-            if (modo === "op") {
-              onSubmitSuccess("mostrarTicket");
-            } else {
-              navigate("/Turno");
-            }
-          }}
+          onGenerarTurno={handleGenerarTurno}
           variant="generarTurno"
+          userData={formData}
+          formattedData={formattedData}
         />
       )}
     </div>

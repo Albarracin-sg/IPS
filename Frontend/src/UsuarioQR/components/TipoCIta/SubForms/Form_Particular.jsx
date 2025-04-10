@@ -10,11 +10,14 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [showModal, setShowModal] = useState(false);
   
-  // Datos completos del formulario
-  const formData = {
+  // Estado para almacenar datos del formulario
+  const [formData, setFormData] = useState({
     type: "paciente-particular",
-    selectedOptions: selectedOptions
-  };
+    selectedOptions: []
+  });
+
+  // Estado para almacenar los datos formateados con estructura final
+  const [formattedData, setFormattedData] = useState(null);
   
   // Lista de especialidades médicas disponibles
   const options = [
@@ -30,44 +33,69 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   
   // Hook para la navegación
   const navigate = useNavigate();
+
+  // Actualiza el objeto formateado con estructura final de envío
+  const updateFormattedData = (services) => {
+    setFormattedData({
+      citas: {
+        tipoCita: "particular",
+        citas: services,
+      }
+    });
+  };
   
   // Función para cerrar el modal
   const handleClose = () => {
     setShowModal(false);
   };
   
-  // Función para manejar la acción del botón "Generar Turno" en el modal
-  const handleTipoDeCita = () => {
-    // Log form data as JSON to console
-    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
-    
-    // Cierra el modal
+  // Acción del botón "Generar Turno" en el modal
+  const handleGenerarTurno = () => {
+    // Solo mandamos el JSON por consola
+    console.log("Datos de cita:",JSON.stringify(formattedData, null, 2));
     setShowModal(false);
-    
     if (modo === "op") {
-      // En modo "op", llama a la función callback en lugar de redireccionar
-      if (onSubmitSuccess) {
-        onSubmitSuccess("datosRegistro");
-      }
+      onSubmitSuccess("mostrarTicket");
     } else {
-      // En modo normal, redirige a la página de tipo de cita
-      navigate("/TipoCita");
+      navigate("/Turno");
     }
   };
   
   // Función para alternar la selección de opciones
   const toggleOption = (option) => {
+    let updatedOptions;
     if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter((item) => item !== option));
+      updatedOptions = selectedOptions.filter((item) => item !== option);
     } else {
-      setSelectedOptions([...selectedOptions, option]);
+      updatedOptions = [...selectedOptions, option];
     }
+    
+    setSelectedOptions(updatedOptions);
+    // Actualizar formData cuando cambian las opciones seleccionadas
+    setFormData({
+      ...formData,
+      selectedOptions: updatedOptions
+    });
+    // Actualizar el formato JSON estructurado
+    updateFormattedData(updatedOptions);
   };
   
   // Función para manejar el envío del formulario
   const handleSubmit = () => {
     if (selectedOptions.length > 0) {
-      onSubmit(selectedOptions);
+      // Si hay callback onSubmit, pasar los datos seleccionados
+      if (onSubmit) {
+        onSubmit(selectedOptions);
+      }
+      
+      // Preparar datos formateados para mostrar en el modal
+      const dataToLog = {
+        citas: {
+          tipoCita: "particular",
+          citas: selectedOptions,
+        }
+      };
+      setFormattedData(dataToLog);
       setShowModal(true);
     }
   };
@@ -122,19 +150,14 @@ const Form_Particular = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
           </div>
         )}
         
-        {/* Modal para generar turno */}
+        {/* Modal de confirmación con datos formateados */}
         {showModal && (
           <Modal
             onClose={handleClose}
-            onGenerarTurno={() => {
-              handleClose();
-              if (modo === "op") {
-                onSubmitSuccess("mostrarTicket");
-              } else {
-                navigate("/Turno");
-              }
-            }}
+            onGenerarTurno={handleGenerarTurno}
             variant="generarTurno"
+            userData={formData}
+            formattedData={formattedData}
           />
         )}
       </div>
