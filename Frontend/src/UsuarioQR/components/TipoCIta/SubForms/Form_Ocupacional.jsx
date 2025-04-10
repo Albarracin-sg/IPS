@@ -24,11 +24,20 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   const navigate = useNavigate();
 
   // Actualiza el objeto formateado con estructura final de envío
+  // Incluye fecha y hora automáticamente sin mostrar campos en el formulario
   const updateFormattedData = (services) => {
+    // Obtener fecha actual en formato YYYY-MM-DD
+    const fechaActual = new Date().toISOString().split('T')[0];
+    
+    // Obtener hora actual en formato HH:MM
+    const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
+    
     setFormattedData({
       citas: {
         tipoCita: "ocupacional",
         citas: services,
+        fecha: fechaActual,  // Agregar fecha actual al JSON
+        hora: horaActual     // Agregar hora actual al JSON
       }
     });
   };
@@ -37,8 +46,10 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   const toggleOption = (option) => {
     let updatedOptions;
     if (selectedOptions.includes(option)) {
+      // Si ya está seleccionado, lo quitamos de la lista
       updatedOptions = selectedOptions.filter((item) => item !== option);
     } else {
+      // Si no está seleccionado, lo añadimos a la lista
       updatedOptions = [...selectedOptions, option];
     }
     
@@ -48,13 +59,14 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
       ...formData,
       selectedOptions: updatedOptions
     });
-    // Actualizar el formato JSON estructurado
+    // Actualizar el formato JSON estructurado con las opciones y agregando fecha y hora
     updateFormattedData(updatedOptions);
   };
 
   // Acción del botón "Generar Turno" en el modal
   const handleGenerarTurno = () => {
-    console.log("Datos de cita:",JSON.stringify(formattedData, null, 2));
+    // Mostrar en consola los datos que se enviarán
+    console.log(JSON.stringify(formattedData, null, 2));
     setShowModal(false);
     if (modo === "op") {
       onSubmitSuccess("mostrarTicket");
@@ -71,9 +83,17 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   // Acción al hacer clic en "Enviar Solicitud"
   const handleSubmit = () => {
     if (selectedOptions.length > 0) {
+      // Obtener fecha y hora actual para incluir en el envío
+      const fechaActual = new Date().toISOString().split('T')[0];
+      const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
+      
       // Si hay callback onSubmit, pasar los datos seleccionados
       if (onSubmit) {
-        onSubmit(selectedOptions);
+        onSubmit({
+          services: selectedOptions,
+          fecha: fechaActual,  // Incluir fecha en callback
+          hora: horaActual     // Incluir hora en callback
+        });
       }
       
       // Preparar datos formateados para mostrar en el modal
@@ -81,6 +101,8 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
         citas: {
           tipoCita: "ocupacional",
           citas: selectedOptions,
+          fecha: fechaActual,  // Incluir fecha en el modal
+          hora: horaActual     // Incluir hora en el modal
         }
       };
       setFormattedData(dataToLog);

@@ -61,12 +61,21 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
   }, [selectedCompany]);
 
   // Actualiza el objeto formateado con estructura final de envío
+  // Incluye fecha y hora automáticamente sin mostrar campos en el formulario
   const updateFormattedData = (company, services) => {
+    // Obtener fecha actual en formato YYYY-MM-DD
+    const fechaActual = new Date().toISOString().split('T')[0];
+    
+    // Obtener hora actual en formato HH:MM
+    const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
+    
     setFormattedData({
       citas: {
         tipoCita: "tripulante",
         nombreNaviera: company,
         citas: services,
+        fecha: fechaActual,  // Agregar fecha actual al JSON
+        hora: horaActual     // Agregar hora actual al JSON
       }
     });
   };
@@ -82,8 +91,10 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
   const toggleService = (service) => {
     let updatedServices;
     if (selectedServices.includes(service)) {
+      // Si ya está seleccionado, lo quitamos de la lista
       updatedServices = selectedServices.filter((item) => item !== service);
     } else {
+      // Si no está seleccionado, lo añadimos a la lista
       updatedServices = [...selectedServices, service];
     }
     setSelectedServices(updatedServices);
@@ -96,7 +107,8 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
 
   // Acción del botón "Generar Turno" en el modal
   const handleGenerarTurno = () => {
-    console.log("Datos de cita:", JSON.stringify(formattedData, null, 2));
+    // Mostramos por consola los datos que se enviarán
+    console.log(JSON.stringify(formattedData, null, 2));
     setShowModal(false);
     if (modo === "op") {
       onSubmitSuccess("mostrarTicket");
@@ -113,11 +125,18 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
   // Acción al hacer clic en "Enviar Solicitud"
   const handleSubmit = () => {
     if (selectedServices.length > 0) {
+      // Obtener fecha y hora actual para incluir en el envío
+      const fechaActual = new Date().toISOString().split('T')[0];
+      const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
+      
+      // Preparar datos formateados para mostrar en el modal
       const dataToLog = {
         citas: {
           tipoCita: "tripulante",
           nombreNaviera: selectedCompany,
           citas: selectedServices,
+          fecha: fechaActual,  // Incluir fecha en el modal
+          hora: horaActual     // Incluir hora en el modal
         }
       };
       setFormattedData(dataToLog);
