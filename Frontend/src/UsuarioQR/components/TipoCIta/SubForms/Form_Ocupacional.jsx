@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronUp, ChevronDown, CheckSquare, Square } from "lucide-react";
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
-import SubmitButton from "../SubmitButton"; // Asegúrate de ajustar la ruta
+import SubmitButton from "../SubmitButton";
+import { useFormData } from "../../../context"; // Importar el hook personalizado
 
 const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
+  // Obtener datos y funciones del contexto
+  const { registroData, setCitaData } = useFormData();
+
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -23,8 +27,14 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   // Hook para redireccionar páginas
   const navigate = useNavigate();
 
+  // Comprobar si los datos de registro están disponibles
+  useEffect(() => {
+    if (!registroData && modo === "op") {
+      console.warn("No hay datos de registro disponibles en el contexto");
+    }
+  }, [registroData, modo]);
+
   // Actualiza el objeto formateado con estructura final de envío
-  // Incluye fecha y hora automáticamente sin mostrar campos en el formulario
   const updateFormattedData = (services) => {
     // Obtener fecha actual en formato YYYY-MM-DD
     const fechaActual = new Date().toISOString().split('T')[0];
@@ -32,12 +42,28 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
     // Obtener hora actual en formato HH:MM
     const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
     
+    // Extrae los datos de registro
+    const registroInfo = registroData || {};
+    
     return {
+      // Datos personales del formulario
+      primerNombre: registroInfo.primerNombre,
+      segundoNombre: registroInfo.segundoNombre,
+      primerApellido: registroInfo.primerApellido,
+      segundoApellido: registroInfo.segundoApellido,
+      fechaNacimiento: registroInfo.fechaNacimiento,
+      localidad: registroInfo.localidad,
+      numeroTelefono: registroInfo.numeroTelefono,
+      tipoDocumento: registroInfo.tipoDocumento,
+      numeroDocumento: registroInfo.numeroDocumento,
+      email: registroInfo.email,
+      
+      // Datos de la cita
       citas: {
         tipoCita: "ocupacional",
         citas: services,
-        fecha: fechaActual,  // Agregar fecha actual al JSON
-        hora: horaActual     // Agregar hora actual al JSON
+        fecha: fechaActual,
+        hora: horaActual
       }
     };
   };
@@ -65,7 +91,8 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   const handleGenerarTurno = () => {
     setShowModal(false);
     if (modo === "op") {
-      onSubmitSuccess("mostrarTicket");
+      // Solo pasamos los datos ya formateados al callback
+      onSubmitSuccess("mostrarTicket", formattedData);
     } else {
       navigate("/Turno");
     }
@@ -80,18 +107,26 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   const handleSubmit = () => {
     if (selectedOptions.length > 0) {
       // Generar los datos formateados
-      const dataToSend = updateFormattedData(selectedOptions);
+      const datosCompletos = updateFormattedData(selectedOptions);
       
       // Enviar datos inmediatamente aquí
-      console.log("Enviando datos:", JSON.stringify(dataToSend, null, 2));
+      console.log(JSON.stringify(datosCompletos, null, 2));
+      
+      // Actualiza el estado de la cita en el contexto
+      setCitaData({
+        tipoCita: "ocupacional",
+        citas: selectedOptions,
+        fecha: new Date().toISOString().split('T')[0],
+        hora: new Date().toTimeString().split(' ')[0].slice(0, 5)
+      });
       
       // Si hay callback onSubmit, pasar los datos seleccionados
       if (onSubmit) {
-        onSubmit(dataToSend);
+        onSubmit(datosCompletos);
       }
       
       // Guardar los datos formateados para mostrar en el modal
-      setFormattedData(dataToSend);
+      setFormattedData(datosCompletos);
       
       // Mostrar el modal de confirmación
       setShowModal(true);
@@ -100,6 +135,19 @@ const Form_Ocupacional = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
 
   return (
     <div className="w-full transition-all duration-500 ease-in-out">
+      {/* Mostrar resumen de datos de registro si están disponibles */}
+      {registroData && (
+        <div className="mb-6 p-4 bg-blue-50 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold text-blue-700 mb-2">Datos de Registro</h3>
+          <p className="text-gray-700">
+            <strong>Nombre:</strong> {registroData.primerNombre} {registroData.segundoNombre} {registroData.primerApellido} {registroData.segundoApellido}
+          </p>
+          <p className="text-gray-700">
+            <strong>Documento:</strong> {registroData.tipoDocumento} {registroData.numeroDocumento}
+          </p>
+        </div>
+      )}
+      
       <div
         className="flex items-center justify-between bg-blue-50 p-4 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"
         onClick={() => setIsExpanded(!isExpanded)}

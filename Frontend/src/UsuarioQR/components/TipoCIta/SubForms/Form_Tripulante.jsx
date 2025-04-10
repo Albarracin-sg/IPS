@@ -3,8 +3,13 @@ import { ChevronUp, ChevronDown, CheckSquare, Square } from "lucide-react";
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
 import SubmitButton from "../SubmitButton";
+import { useFormData } from "../../../context"; // Importar el hook personalizado
 
-const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
+const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
+  // Obtener datos y funciones del contexto
+  const { registroData, setCitaData } = useFormData();
+  // No usamos enviarDatosCompletos para evitar la duplicación de JSON
+
   // Empresa seleccionada por el usuario
   const [selectedCompany, setSelectedCompany] = useState("");
 
@@ -36,6 +41,13 @@ const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   // Hook para redireccionar páginas
   const navigate = useNavigate();
 
+  // Comprobar si los datos de registro están disponibles
+  useEffect(() => {
+    if (!registroData && modo === "op") {
+      console.warn("No hay datos de registro disponibles en el contexto");
+    }
+  }, [registroData, modo]);
+
   // Retorna los servicios disponibles según la empresa seleccionada
   const getServices = (company) => {
     return [
@@ -56,27 +68,27 @@ const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
         company: selectedCompany,
         selectedOptions: services
       });
+      updateFormattedData(selectedCompany, services);
     }
   }, [selectedCompany]);
 
-  // Crea y devuelve el objeto formateado con estructura final de envío
-  // Incluye fecha y hora automáticamente sin mostrar campos en el formulario
-  const createFormattedData = (company, services) => {
+  // Actualiza el objeto formateado con estructura final de envío
+  const updateFormattedData = (company, services) => {
     // Obtener fecha actual en formato YYYY-MM-DD
     const fechaActual = new Date().toISOString().split('T')[0];
     
     // Obtener hora actual en formato HH:MM
     const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
     
-    return {
+    setFormattedData({
       citas: {
         tipoCita: "tripulante",
         nombreNaviera: company,
         citas: services,
-        fecha: fechaActual,  // Agregar fecha actual al JSON
-        hora: horaActual     // Agregar hora actual al JSON
+        fecha: fechaActual,
+        hora: horaActual
       }
-    };
+    });
   };
 
   // Al seleccionar una empresa, se oculta su lista y se muestra servicios
@@ -101,13 +113,15 @@ const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
       ...formData,
       selectedOptions: updatedServices
     });
+    updateFormattedData(selectedCompany, updatedServices);
   };
 
   // Acción del botón "Generar Turno" en el modal
   const handleGenerarTurno = () => {
     setShowModal(false);
     if (modo === "op") {
-      onSubmitSuccess("mostrarTicket");
+      // Solo pasamos los datos ya formateados al callback
+      onSubmitSuccess("mostrarTicket", formattedData);
     } else {
       navigate("/Turno");
     }
@@ -121,27 +135,77 @@ const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
   // Acción al hacer clic en "Enviar Solicitud"
   const handleSubmit = () => {
     if (selectedServices.length > 0) {
-      // Crear los datos formateados
-      const dataToSend = createFormattedData(selectedCompany, selectedServices);
+      // Extrae los datos de registro
+      const registroInfo = registroData || {};
       
-      // Enviar datos inmediatamente aquí
-      console.log("Enviando datos:", JSON.stringify(dataToSend, null, 2));
+      // Obtener fecha y hora actual
+      const fechaActual = new Date().toISOString().split('T')[0];
+      const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
       
-      // Si hay callback onSubmit, pasar los datos formateados
-      if (onSubmit) {
-        onSubmit(dataToSend);
-      }
+      // Crea un objeto con la estructura deseada (como en tu primer JSON)
+      const datosCompletos = {
+        // Datos personales del formulario
+        primerNombre: registroInfo.primerNombre,
+        segundoNombre: registroInfo.segundoNombre,
+        primerApellido: registroInfo.primerApellido,
+        segundoApellido: registroInfo.segundoApellido,
+        fechaNacimiento: registroInfo.fechaNacimiento,
+        localidad: registroInfo.localidad,
+        numeroTelefono: registroInfo.numeroTelefono,
+        tipoDocumento: registroInfo.tipoDocumento,
+        numeroDocumento: registroInfo.numeroDocumento,
+        email: registroInfo.email,
+        
+        // Datos de la cita
+        citas: {
+          tipoCita: "tripulante",
+          nombreNaviera: selectedCompany,
+          citas: selectedServices,
+          fecha: fechaActual,
+          hora: horaActual
+        }
+      };
       
-      // Guardar los datos formateados para mostrar en el modal
-      setFormattedData(dataToSend);
+      // Envía SOLO los datos del componente
+      console.log(JSON.stringify(datosCompletos, null, 2));
       
-      // Mostrar el modal de confirmación
+      // Actualiza el estado de la cita en el contexto
+      setCitaData({
+        tipoCita: "tripulante",
+        nombreNaviera: selectedCompany,
+        citas: selectedServices,
+        fecha: fechaActual,
+        hora: horaActual
+      });
+      
+      // Guardamos los datos formateados para pasarlos al modal y al callback
+      setFormattedData(datosCompletos);
       setShowModal(true);
     }
   };
 
+  // Verificar datos de registro al inicio
+  useEffect(() => {
+    if (!registroData) {
+      console.log("Datos de registro encontrados:", registroData);
+    }
+  }, [registroData, navigate, modo]);
+
   return (
     <div className="w-full transition-all duration-500 ease-in-out">
+      {/* Mostrar resumen de datos de registro si están disponibles */}
+      {registroData && (
+        <div className="mb-6 p-4 bg-blue-50 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold text-blue-700 mb-2">Datos de Registro</h3>
+          <p className="text-gray-700">
+            <strong>Nombre:</strong> {registroData.primerNombre} {registroData.segundoNombre} {registroData.primerApellido} {registroData.segundoApellido}
+          </p>
+          <p className="text-gray-700">
+            <strong>Documento:</strong> {registroData.tipoDocumento} {registroData.numeroDocumento}
+          </p>
+        </div>
+      )}
+      
       {/* Sección de selección de empresa */}
       <div
         className="flex items-center justify-between bg-blue-50 p-4 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-all duration-300"

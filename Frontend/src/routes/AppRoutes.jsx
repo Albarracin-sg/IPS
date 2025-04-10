@@ -18,32 +18,35 @@ import SueroterapiaPage from "../pages/PagOperador/Especializaciones/Sueroterapi
 /* Rutas de Operador */
 import PagMainOp from "../pages/PagOperador/OperadorNormal/Operador";
 
+import { FormProvider } from '../UsuarioQR/context';
 function AppRoutes() {
   return (
-    <Routes>
-      {/* Rutas de Usuario */}
-      <Route path="/" element={<PrincipaPage />} />
-      <Route path="/registro" element={<RegisterForm />} />
-      <Route path="/turno" element={<Ticket />} />
-      <Route path="/TipoCita" element={<TipoCita />} />
+    <FormProvider>
+      <Routes>
+        {/* Rutas de Usuario */}
+        <Route path="/" element={<PrincipaPage />} />
+        <Route path="/registro" element={<RegisterForm />} />
+        <Route path="/turno" element={<Ticket />} />
+        <Route path="/TipoCita" element={<TipoCita />} />
 
-      {/* Ruta del televisor */}
-      <Route path="/Screen" element={<Screen />} />
-      
-      {/* Rutas de Especializaciones-Doctor */}
-      <Route path="/OdontologiaOp" element={<OdontologiaPage />} />
-      <Route path="/MedicinaAlternativaOp" element={<MedicinaAlternativaPage />} />
-      <Route path="/EsteticaOp" element={<EsteticaPage />} />
-      <Route path="/LaboratorioClinicoOp" element={<LaboratorioClinicoPage />} />
-      <Route path="/RayosXOp" element={<RayosXPage />} />
-      <Route path="/MedicinaGeneralOp" element={<MedicinaGeneralPage />} />
-      <Route path="/VacunacionOp" element={<VacuancionesPage />} />
-      <Route path="/SueroterapiaOp" element={<SueroterapiaPage />} />
+        {/* Ruta del televisor */}
+        <Route path="/Screen" element={<Screen />} />
+        
+        {/* Rutas de Especializaciones-Doctor */}
+        <Route path="/OdontologiaOp" element={<OdontologiaPage />} />
+        <Route path="/MedicinaAlternativaOp" element={<MedicinaAlternativaPage />} />
+        <Route path="/EsteticaOp" element={<EsteticaPage />} />
+        <Route path="/LaboratorioClinicoOp" element={<LaboratorioClinicoPage />} />
+        <Route path="/RayosXOp" element={<RayosXPage />} />
+        <Route path="/MedicinaGeneralOp" element={<MedicinaGeneralPage />} />
+        <Route path="/VacunacionOp" element={<VacuancionesPage />} />
+        <Route path="/SueroterapiaOp" element={<SueroterapiaPage />} />
 
-      {/* Rutas de Operador */}
-      <Route path="/mainOp" element={<PagMainOp />} />
+        {/* Rutas de Operador */}
+        <Route path="/mainOp" element={<PagMainOp />} />
 
-    </Routes>
+      </Routes>
+    </FormProvider>
   );
 }
 

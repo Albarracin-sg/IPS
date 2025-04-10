@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Label from "./Label";
 import Modal from "../Principal/Modal";
 import { useNavigate } from "react-router-dom";
+import { useFormData } from "../../context"; // Importar el hook personalizado
 
 const RegisterForm = ({ modo, onSubmitSuccess }) => {
   const [showModal, setShowModal] = useState(false);
@@ -18,6 +19,9 @@ const RegisterForm = ({ modo, onSubmitSuccess }) => {
     email: "",
   });
   
+  // Obtener la función para guardar datos del registro del contexto
+  const { setRegistroData } = useFormData();
+  
   const navigate = useNavigate();
   
   const handleInputChange = (e) => {
@@ -28,10 +32,10 @@ const RegisterForm = ({ modo, onSubmitSuccess }) => {
     });
   };
   
-  // Modificado: ahora solo valida el form y muestra el modal
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Solo mostrar el modal después de validar el formulario
+    
+    // Ahora mostrar el modal
     setShowModal(true);
   };
   
@@ -48,11 +52,15 @@ const RegisterForm = ({ modo, onSubmitSuccess }) => {
   };
   
   // envía los datos y redirecciona según el modo
-  const handleTipoDeCita = () => {
-    // Log form data as JSON to console
-    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
+  const handleTipoDeCita = () => {    
     
-    // lógica para enviar datos al servidor
+    // Guardar datos en el contexto global inmediatamente, no esperar al modal
+    setRegistroData(formData);
+    
+    console.log("Datos de registro guardados en contexto:", formData);
+    
+    // Guardar datos en el contexto global
+    setRegistroData(formData);
     
     setShowModal(false); // Cierra el modal
     
@@ -69,7 +77,7 @@ const RegisterForm = ({ modo, onSubmitSuccess }) => {
   return (
     <>
       {/* Contenedor principal con fondo degradado y sombra */}
-      <div className="bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-3xl p-6 w-full max-w-6xl mx-auto border border-gray-100 mt-16">
+      <div className="bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-3xl p-6 w-full max-w-6xl mx-auto border border-gray-100 ">
         {/* Encabezado con diseño curvo y línea decorativa */}
         <div className="mb-6 text-center">
           <div className="relative">
