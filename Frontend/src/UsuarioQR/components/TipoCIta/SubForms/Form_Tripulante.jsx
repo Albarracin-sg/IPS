@@ -119,6 +119,15 @@ const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
   // Acción del botón "Generar Turno" en el modal
   const handleGenerarTurno = () => {
     setShowModal(false);
+    const registroInfo = registroData || {};
+    const horaActual = new Date().toTimeString().split(' ')[0].slice(0, 5);
+    const dataTurno = {
+      fechaCita:null,
+      TipoCita:"tripulante",
+      HoraTurno:horaActual,
+      numeroDocumento:registroInfo.numeroDocumento,
+    };
+    console.log(JSON.stringify(dataTurno, null, 2));
     if (modo === "op") {
       // Solo pasamos los datos ya formateados al callback
       onSubmitSuccess("mostrarTicket", formattedData);
