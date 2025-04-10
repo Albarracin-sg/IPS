@@ -1,34 +1,42 @@
 import React, { useState, useEffect } from "react";
-// Importación de íconos necesarios
 import { ChevronUp, ChevronDown, CheckSquare, Square } from "lucide-react";
 import Modal from "../../Principal/Modal";
 import { useNavigate } from "react-router-dom";
-import SubmitButton from "../SubmitButton"; // Asegúrate de ajustar la ruta
+import SubmitButton from "../SubmitButton";
 
-const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
-  // Estados para manejar la selección de empresa y servicios
+const Form_Tripulante = ({ modo = "normal", onSubmitSuccess }) => {
+  // Empresa seleccionada por el usuario
   const [selectedCompany, setSelectedCompany] = useState("");
-  const [customCompany, setCustomCompany] = useState("");
+
+  // Servicios médicos seleccionados
   const [selectedServices, setSelectedServices] = useState([]);
+
+  // Visibilidad del bloque de empresas
   const [showCompanyOptions, setShowCompanyOptions] = useState(true);
+
+  // Visibilidad del bloque de servicios
   const [showServiceOptions, setShowServiceOptions] = useState(false);
-  const [showCustomCompanyInput, setShowCustomCompanyInput] = useState(false);
+
+  // Visibilidad del modal de confirmación
   const [showModal, setShowModal] = useState(false);
-  
-  // Estado para almacenar datos completos que se pasarán al modal
+
+  // Datos crudos del formulario para enviar al modal
   const [formData, setFormData] = useState({
     type: "tripulante-naviera",
     selectedOptions: [],
     company: ""
   });
 
-  // Lista de empresas disponibles
+  // Datos formateados en estructura final
+  const [formattedData, setFormattedData] = useState(null);
+
+  // Lista fija de empresas/navieras disponibles
   const companies = ["Princess", "Carnival", "NCL", "Hotel Carnival", "Otra"];
 
-  // Hook para la navegación
+  // Hook para redireccionar páginas
   const navigate = useNavigate();
 
-  // Lista de servicios disponibles (condicional si es NCL)
+  // Retorna los servicios disponibles según la empresa seleccionada
   const getServices = (company) => {
     return [
       "Medicina General",
@@ -38,54 +46,39 @@ const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
     ];
   };
 
-  // Efecto para preseleccionar todos los servicios cuando cambia la empresa seleccionada
+  // Si cambia la empresa, se seleccionan todos los servicios automáticamente
   useEffect(() => {
     if (selectedCompany) {
       const services = getServices(selectedCompany);
-      setSelectedServices(services); // Seleccionar todos los servicios por defecto
-      
-      // Actualizar formData cuando cambia la empresa
+      setSelectedServices(services);
       setFormData({
         ...formData,
-        company: selectedCompany === "Otra" ? customCompany : selectedCompany,
+        company: selectedCompany,
         selectedOptions: services
       });
+      updateFormattedData(selectedCompany, services);
     }
   }, [selectedCompany]);
 
-  // Efecto para actualizar formData cuando cambia la empresa personalizada
-  useEffect(() => {
-    if (selectedCompany === "Otra" && customCompany) {
-      setFormData({
-        ...formData,
-        company: customCompany
-      });
-    }
-  }, [customCompany]);
+  // Actualiza el objeto formateado con estructura final de envío
+  const updateFormattedData = (company, services) => {
+    setFormattedData({
+      citas: {
+        tipoCita: "tripulante",
+        nombreNaviera: company,
+        citas: services,
+      }
+    });
+  };
 
-  // Maneja la selección de una empresa
+  // Al seleccionar una empresa, se oculta su lista y se muestra servicios
   const handleCompanySelect = (company) => {
     setSelectedCompany(company);
-
-    if (company === "Otra") {
-      setShowCustomCompanyInput(true);
-    } else {
-      setShowCustomCompanyInput(false);
-      setShowCompanyOptions(false);
-      setShowServiceOptions(true);
-    }
+    setShowCompanyOptions(false);
+    setShowServiceOptions(true);
   };
 
-  // Maneja el envío de una empresa personalizada
-  const handleCustomCompanySubmit = () => {
-    if (customCompany.trim()) {
-      setShowCompanyOptions(false);
-      setShowCustomCompanyInput(false);
-      setShowServiceOptions(true);
-    }
-  };
-
-  // Alterna la selección de servicios
+  // Al hacer clic en un servicio, lo añade o lo elimina del estado
   const toggleService = (service) => {
     let updatedServices;
     if (selectedServices.includes(service)) {
@@ -93,48 +86,41 @@ const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
     } else {
       updatedServices = [...selectedServices, service];
     }
-    
     setSelectedServices(updatedServices);
-    
-    // Actualizar formData cuando cambian los servicios seleccionados
     setFormData({
       ...formData,
       selectedOptions: updatedServices
     });
+    updateFormattedData(selectedCompany, updatedServices);
   };
 
-  // Función para manejar la acción del botón en el modal
-  const handleTipoDeCita = () => {
-    // Log form data as JSON to console
-    console.log("Form data submitted:", JSON.stringify(formData, null, 2));
-    
-    // Cierra el modal
+  // Acción del botón "Generar Turno" en el modal
+  const handleGenerarTurno = () => {
+    console.log("Datos de cita:", JSON.stringify(formattedData, null, 2));
     setShowModal(false);
-    
     if (modo === "op") {
-      // En modo "op", llama a la función callback en lugar de redireccionar
-      if (onSubmitSuccess) {
-        onSubmitSuccess("datosRegistro");
-      }
+      onSubmitSuccess("mostrarTicket");
     } else {
-      // En modo normal, redirige a la página de tipo de cita
-      navigate("/TipoCita");
+      navigate("/Turno");
     }
   };
 
-  // Funciones para manejo del modal
+  // Cierre del modal manualmente
   const handleClose = () => {
     setShowModal(false);
   };
 
-  // Maneja el envío del formulario
+  // Acción al hacer clic en "Enviar Solicitud"
   const handleSubmit = () => {
     if (selectedServices.length > 0) {
-      // Llamar al onSubmit pasado como prop con los datos necesarios
-      onSubmit({
-        company: selectedCompany === "Otra" ? customCompany : selectedCompany,
-        services: selectedServices
-      });
+      const dataToLog = {
+        citas: {
+          tipoCita: "tripulante",
+          nombreNaviera: selectedCompany,
+          citas: selectedServices,
+        }
+      };
+      setFormattedData(dataToLog);
       setShowModal(true);
     }
   };
@@ -148,7 +134,7 @@ const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
       >
         <h3 className="text-xl font-medium text-blue-700">
           {selectedCompany
-            ? `Empresa: ${selectedCompany === "Otra" ? customCompany || "Otra" : selectedCompany}`
+            ? `Empresa: ${selectedCompany}`
             : "Seleccione Empresa"}
         </h3>
         {/* Ícono de expansión/colapso */}
@@ -177,29 +163,6 @@ const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
               </div>
             ))}
           </div>
-
-          {showCustomCompanyInput && (
-            <div className="mt-4 animate-fadeIn">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre de la empresa
-              </label>
-              <input
-                type="text"
-                value={customCompany}
-                onChange={(e) => setCustomCompany(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                placeholder="Ingrese nombre de la empresa"
-                autoFocus
-              />
-              <button
-                className="cursor-pointer mt-3 w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md"
-                onClick={handleCustomCompanySubmit}
-                disabled={!customCompany.trim()}
-              >
-                Continuar
-              </button>
-            </div>
-          )}
         </div>
       )}
 
@@ -247,19 +210,14 @@ const Form_Tripulante = ({ onSubmit, modo = "normal", onSubmitSuccess }) => {
         </div>
       )}
 
-      {/* Modal de confirmación */}
+      {/* Modal de confirmación con datos formateados */}
       {showModal && (
         <Modal
           onClose={handleClose}
-          onGenerarTurno={() => {
-            handleClose();
-            if (modo === "op") {
-              onSubmitSuccess("mostrarTicket");
-            } else {
-              navigate("/Turno");
-            }
-          }}
+          onGenerarTurno={handleGenerarTurno}
           variant="generarTurno"
+          userData={formData}
+          formattedData={formattedData}
         />
       )}
     </div>
